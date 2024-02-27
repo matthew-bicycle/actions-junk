@@ -1,0 +1,17 @@
+name: Hello
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  hello-world:
+    steps:
+      - name: Say hello
+        run: echo "Hello, World!"
