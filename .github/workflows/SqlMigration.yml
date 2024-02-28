@@ -9,7 +9,7 @@ on:
 
 jobs:
   SqlMigration:
-    name: SqlMigration-${{ inputs.envName }}
+    name: Migrate SQL in ${{ inputs.envName }}
     runs-on: ubuntu-latest
     concurrency:
       group: SqlMigration-${{ inputs.envName }}
