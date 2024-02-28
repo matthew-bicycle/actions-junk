@@ -1,4 +1,4 @@
-name: On Pull Request
+name: _On Pull Request
 run-name: "PR #${{ github.event.pull_request.number }} Updated"
 
 on:
