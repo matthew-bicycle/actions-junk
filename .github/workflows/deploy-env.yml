@@ -37,3 +37,7 @@ jobs:
     uses: ./.github/workflows/deploy-svc-sql.yml
     with:
       envName: ${{ inputs.envName }}
+  CloudFunctionsDeploy:
+    uses: ./.github/workflows/CloudFunctionDeployment.yml
+    with:
+      envName: ${{ inputs.envName }}
