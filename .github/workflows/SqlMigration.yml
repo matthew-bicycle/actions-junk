@@ -1,4 +1,4 @@
-name: _SQL Migration
+name: SQL Migration
 
 on:
   workflow_call:
