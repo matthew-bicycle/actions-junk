@@ -1,5 +1,4 @@
 name: SQL Migration
-run-name: Run SQL Migrations in ${{ inputs.envName }}
 
 on:
   workflow_call:
@@ -7,17 +6,10 @@ on:
       envName:
         required: true
         type: string
-  workflow_dispatch:
-    inputs:
-      envName:
-        required: true
-        type: choice
-        options:
-          - dev
-          # - prod
 
 jobs:
   SqlMigration:
+    name: SqlMigration-${{ inputs.envName }}
     runs-on: ubuntu-latest
     concurrency:
       group: SqlMigration-${{ inputs.envName }}

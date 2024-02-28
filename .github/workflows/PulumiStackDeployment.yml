@@ -1,5 +1,4 @@
 name: Pulumi Stack Deployment
-run-name: Deploy Pulumi stack ${{ inputs.stackName }}
 
 on:
   workflow_call:
@@ -7,12 +6,16 @@ on:
       stackName:
         type: string
         required: true
+      envName:
+        type: string
+        required: true
 
 jobs:
   DeployPulumiStack:
+    name: DeployPulumiStack-${{ inputs.envName}}-${{ inputs.stackName }}
     runs-on: ubuntu-latest
     concurrency:
-      group: stack-${{ inputs.stackName }}
+      group: DeployPulumiStack-${{ inputs.envName}}-${{ inputs.stackName }}
     steps:
       - run: |
-          echo "Deploy Pulumi Stack: ${{ inputs.stackName }}"
+          echo "Deploy Pulumi Stack: ${{ inputs.stackName }} in ${{ inputs.envName }}"

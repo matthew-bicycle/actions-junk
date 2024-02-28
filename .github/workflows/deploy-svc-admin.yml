@@ -13,7 +13,8 @@ on:
         required: true
         type: choice
         options:
-          - dev
+          # - dev
+          - dev1
           - staging
           # - prod
 

@@ -13,9 +13,10 @@ on:
 
 jobs:
   CloudRunServiceDeployment:
+    name: CloudRunServiceDeployment-${{ inputs.serviceName }}→${{ inputs.envName }}
     environment: ${{ inputs.envName }}
     concurrency:
-      group: CloudRunServiceDeployment-${{ inputs.serviceName }}
+      group: CloudRunServiceDeployment-${{ inputs.serviceName }}-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
       - run: |
