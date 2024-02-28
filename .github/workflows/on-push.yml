@@ -1,4 +1,4 @@
-name: 🏗️ On Push
+name: _On Push
 run-name: "Push to branch ${{ github.ref }}"
 
 on:
