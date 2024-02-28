@@ -5,6 +5,6 @@ on:
 
 jobs:
   Test:
-    uses: ./.github/workflows/Test.yml
+    uses: ./.github/workflows/UnitTest.yml
 # FIXME: add preview-cloudtasks-dev/prod
 # FIXME: add preview-cloudsql-dev/prod
