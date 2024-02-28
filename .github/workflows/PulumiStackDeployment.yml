@@ -1,4 +1,4 @@
-name: ⚙️ Pulumi Stack Deployment
+name: 📚 Pulumi Stack Deployment
 
 on:
   workflow_call:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   DeployPulumiStack:
-    name: DeployPulumiStack-${{ inputs.envName}}-${{ inputs.stackName }}
+    name: Deploy ${{ inputs.envName}}-${{ inputs.stackName }} (Pulumi Stack)
     runs-on: ubuntu-latest
     concurrency:
       group: DeployPulumiStack-${{ inputs.envName}}-${{ inputs.stackName }}

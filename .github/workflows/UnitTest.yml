@@ -1,11 +1,11 @@
-name: ⚙️ Unit Tests
+name: 📚 Unit Tests
 
 on:
   workflow_call:
 
 jobs:
   UnitTests:
-    name: UnitTests-${{ github.ref }}
+    name: Unit test ${{ github.ref }}@${{ github.sha }}
     concurrency:
       group: UnitTests-${{ github.ref }}
     runs-on: ubuntu-latest

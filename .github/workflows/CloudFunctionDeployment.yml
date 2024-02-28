@@ -1,4 +1,4 @@
-name: ⚙️ Cloud Function Deployment
+name: 📚 Cloud Function Deployment
 
 on:
   workflow_call:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   CloudFunctionDeployment:
-    name: CloudFunctionDeployment-${{ inputs.functionName }}→${{ inputs.envName }}
+    name: Deploy ${{ inputs.functionName }}→${{ inputs.envName }} (Cloud Functions)
     environment: ${{ inputs.envName }}
     concurrency:
       group: CloudFunctionDeployment-${{ inputs.functionName }}-${{ inputs.envName }}
