@@ -16,7 +16,7 @@ jobs:
     environment: ${{ inputs.envName }}
     concurrency:
       group: CloudRunServiceDeployment-${{ inputs.serviceName }}
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
       - run: |
           echo "Deploy Run Service: ${{ inputs.serviceName }}"

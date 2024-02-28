@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  deployCloudFunction:
+  DeployPulumiStack:
     runs-on: ubuntu-latest
     concurrency:
       group: stack-${{ inputs.stackName }}
