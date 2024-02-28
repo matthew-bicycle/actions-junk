@@ -1,4 +1,4 @@
-name: Pulumi Stack Deployment
+name: ⚙️ Pulumi Stack Deployment
 
 on:
   workflow_call:

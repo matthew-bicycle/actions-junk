@@ -1,4 +1,5 @@
 name: 🏗️ On Push
+run-name: "Push to branch ${{ github.ref }}"
 
 on:
   push:
@@ -7,7 +8,7 @@ jobs:
   Build:
     uses: ./.github/workflows/Build.yml
   DeployMainToDev:
-    name: Dev deploy new commits on main
+    name: Update dev from new main
     if: ${{ github.ref == 'refs/heads/main' }} # FIXME: verify ref name
     needs: [Build]
     uses: ./.github/workflows/deploy-env.yml
