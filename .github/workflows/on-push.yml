@@ -6,7 +6,9 @@ on:
 jobs:
   Build:
     uses: ./.github/workflows/Build.yml
-  DevDeploy:
+  DevDeployFromMain:
     if: ${{ github.ref == 'refs/heads/main' }} # FIXME: verify ref name
     needs: [Build]
-    uses: ./.github/workflows/env-deploy-dev.yml
+    uses: ./.github/workflows/deploy-env.yml
+    with:
+      envName: dev

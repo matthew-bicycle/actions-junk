@@ -10,10 +10,7 @@ on:
 run-name: Build ${GITHUB_SHA}
 
 jobs:
-  doTest:
-    uses: ./.github/workflows/Test.yml
   deployCloudFunction:
-    needs: [doTest]
     runs-on: ubuntu-latest
     concurrency:
       group: stack-${{ inputs.stackName }}

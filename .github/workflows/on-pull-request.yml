@@ -4,7 +4,10 @@ on:
   pull_request:
 
 jobs:
-  doTest:
+  Build:
+    uses: ./.github/workflows/Build.yml
+  Test:
+    needs: [Build]
     uses: ./.github/workflows/Test.yml
 # FIXME: add preview-cloudtasks-dev/prod
 # FIXME: add preview-cloudsql-dev/prod

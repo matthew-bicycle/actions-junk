@@ -7,9 +7,9 @@ permissions:
   contents: read
 
 jobs:
-  buildBhMonorepo:
+  Build:
     concurrency:
-      group: build-${{ github.ref }}
+      group: Build-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "Building code"

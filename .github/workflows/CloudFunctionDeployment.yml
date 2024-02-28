@@ -9,13 +9,10 @@ on:
         default: ALL_FUNCTIONS
 
 jobs:
-  doTest:
-    uses: ./.github/workflows/Test.yml
-  deployCloudFunction:
-    needs: [doTest]
-    runs-on: ubuntu-latest
+  CloudFunctionDeployment:
     concurrency:
-      group: deploy-function-${{ inputs.functionName }}
+      group: CloudFunctionDeployment-${{ inputs.functionName }}
+    runs-on: ubuntu-latest
     steps:
       - if: ${{ inputs.functionName == 'ALL_FUNCTIONS' }}
         run: |

@@ -1,0 +1,29 @@
+name: Deploy Admin
+
+on:
+  workflow_call:
+    inputs:
+      envName:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      envName:
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          # - prod
+
+jobs:
+  Build:
+    uses: ./.github/workflows/Build.yml
+  Test:
+    needs: [Build]
+    uses: ./.github/workflows/Test.yml
+  DeployAdmin:
+    needs: [Test]
+    uses: ./.github/workflows/CloudRunServiceDeployment.yml
+    with:
+      serviceName: admin-${{ inputs.envName }}

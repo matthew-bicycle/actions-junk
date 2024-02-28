@@ -1,4 +1,4 @@
-name: Deploy CloudTasks
+name: SQL Migration
 
 on:
   workflow_call:
@@ -16,9 +16,10 @@ on:
           # - prod
 
 jobs:
-  doDeployCloudTasks:
+  SqlMigration:
     runs-on: ubuntu-latest
+    concurrency:
+      group: SqlMigration-${{ inputs.envName }}
     steps:
-      - uses: ./.github/workflows/PulumiStackDeployment.yml
-        with:
-          stackName: cloudtasks-${{ inputs.envName }}
+      - run: |
+          echo "Migrating SQL"

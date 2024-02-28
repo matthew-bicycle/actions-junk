@@ -1,0 +1,50 @@
+name: Deploy All Services
+
+on:
+  workflow_call:
+    inputs:
+      envName:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      envName:
+        type: choice
+        required: true
+        options:
+          - dev
+          # - prod
+
+run-name: Deploy All Services to ${{ inputs.envName }}
+
+jobs:
+  Build:
+    uses: ./.github/workflows/Build.yml
+  Test:
+    needs: [Build]
+    uses: ./.github/workflows/Test.yml
+  ApiDeploy:
+    needs: [Test]
+    uses: ./.github/workflows/deploy-svc-api.yml
+    with:
+      envName: ${{ inputs.envName }}
+  AdminDeploy:
+    needs: [Test]
+    uses: ./.github/workflows/deploy-svc-admin.yml
+    with:
+      envName: ${{ inputs.envName }}
+  OracleDeploy:
+    needs: [Test]
+    uses: ./.github/workflows/deploy-svc-oracle.yml
+    with:
+      envName: ${{ inputs.envName }}
+  CloudTasksDeploy:
+    needs: [Test]
+    uses: ./.github/workflows/deploy-svc-cloudtasks.yml
+    with:
+      envName: ${{ inputs.envName }}
+  SqlDeploy:
+    needs: [Test]
+    uses: ./.github/workflows/deploy-svc-sql.yml
+    with:
+      envName: ${{ inputs.envName }}

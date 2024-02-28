@@ -16,12 +16,18 @@ on:
           # - prod
 
 jobs:
-  doDeploySQL:
+  Build:
+    uses: ./.github/workflows/Build.yml
+  Test:
+    needs: [Build]
+    uses: ./.github/workflows/Test.yml
+  DeploySQL:
+    needs: [Test]
     uses: ./.github/workflows/PulumiStackDeployment.yml
     with:
       stackName: sql-${{ inputs.envName }}
-  doMigrateSQL:
-    needs: [doDeploySQL]
-    uses: ./.github/workflows/MigrateSQL.yml
+  SqlMigration:
+    needs: [DeploySQL]
+    uses: ./.github/workflows/SqlMigration.yml
     with:
       envName: ${{ inputs.envName }}

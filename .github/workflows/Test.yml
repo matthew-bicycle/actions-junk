@@ -4,8 +4,6 @@ on:
   workflow_call:
 
 jobs:
-  doBuild:
-    uses: ./.github/workflows/Build.yml
   doBhUnitTests:
     concurrency:
       group: test-${{ github.ref }}
