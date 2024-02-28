@@ -1,4 +1,5 @@
 name: Pulumi Stack Deployment
+run-name: Deploy Pulumi stack ${{ inputs.stackName }}
 
 on:
   workflow_call:
@@ -6,8 +7,6 @@ on:
       stackName:
         type: string
         required: true
-
-run-name: Build ${GITHUB_SHA}
 
 jobs:
   deployCloudFunction:

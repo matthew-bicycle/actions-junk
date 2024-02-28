@@ -1,4 +1,5 @@
 name: Deploy SQL
+run-name: Deploy SQL to ${{ inputs.envName }}
 
 on:
   workflow_call:

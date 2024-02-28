@@ -1,4 +1,5 @@
 name: Deploy Admin
+run-name: Deploy Admin to ${{ inputs.envName }}
 
 on:
   workflow_call:
@@ -27,3 +28,4 @@ jobs:
     uses: ./.github/workflows/CloudRunServiceDeployment.yml
     with:
       serviceName: admin-${{ inputs.envName }}
+      envName: ${{ inputs.envName }}

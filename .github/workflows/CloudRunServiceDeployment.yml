@@ -1,4 +1,5 @@
 name: Cloud Run Deployment
+run-name: "Cloud Run Deployment | ${{ inputs.serviceName }} in ${{ inputs.envName }}"
 
 on:
   workflow_call:
@@ -6,9 +7,13 @@ on:
       serviceName:
         type: string
         required: true
+      envName:
+        type: string
+        required: true
 
 jobs:
   CloudRunServiceDeployment:
+    environment: ${{ inputs.envName }}
     concurrency:
       group: CloudRunServiceDeployment-${{ inputs.serviceName }}
     runs-on: ubuntu

@@ -1,4 +1,5 @@
 name: Deploy CloudTasks
+run-name: Deploy CloudTask queues to ${{ inputs.envName }}
 
 on:
   workflow_call:

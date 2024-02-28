@@ -1,4 +1,5 @@
 name: Deploy API
+run-name: Deploy API to ${{ inputs.envName }}
 
 on:
   workflow_call:
@@ -17,13 +18,8 @@ on:
           # - prod
 
 jobs:
-  Build:
-    uses: ./.github/workflows/Build.yml
-  Test:
-    needs: [Build]
-    uses: ./.github/workflows/Test.yml
   DeployApi:
-    needs: [Test]
     uses: ./.github/workflows/CloudRunServiceDeployment.yml
     with:
       serviceName: api-${{ inputs.envName }}
+      envName: ${{ inputs.envName }}

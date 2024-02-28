@@ -1,12 +1,14 @@
-name: Test
+name: Unit Tests
+run-name: "[Tests] ${{ github.ref_name }} @ ${{ github.sha }}"
 
 on:
   workflow_call:
 
 jobs:
-  doBhUnitTests:
+  UnitTests:
     concurrency:
-      group: test-${{ github.ref }}
+      group: UnitTests-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "Running unit tests"
+      - run: echo "Pushing statistics"
