@@ -17,13 +17,7 @@ on:
           # - prod
 
 jobs:
-  Build:
-    uses: ./.github/workflows/Build.yml
-  Test:
-    needs: [Build]
-    uses: ./.github/workflows/Test.yml
   DeployCloudTasks:
-    needs: [Test]
     uses: ./.github/workflows/PulumiStackDeployment.yml
     with:
       stackName: cloudtasks-${{ inputs.envName }}
