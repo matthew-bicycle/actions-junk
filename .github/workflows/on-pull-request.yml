@@ -1,0 +1,12 @@
+name: Push
+
+on:
+  pull_request:
+
+jobs:
+  doTest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./Test.yml
+# FIXME: add preview-cloudtasks-dev/prod
+# FIXME: add preview-cloudsql-dev/prod

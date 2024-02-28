@@ -1,0 +1,23 @@
+name: Cloud Function Deployment
+
+on:
+  workflow_call:
+    inputs:
+      functionName:
+        type: string
+        required: false
+        default: ALL_FUNCTIONS
+
+jobs:
+  deployCloudFunction:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-function-${{ inputs.functionName }}
+    steps:
+      - uses: ./Test.yml
+      - if: ${{ inputs.functionName == 'ALL_FUNCTIONS' }}
+        run: |
+          echo: "Deploy ALL Cloud Functions"
+      - if: ${{ inputs.functionName != 'ALL_FUNCTIONS' }}
+        run: |
+          echo "Deploy Cloud Function: ${{ inputs.functionName }}"

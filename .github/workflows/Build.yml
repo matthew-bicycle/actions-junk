@@ -1,0 +1,16 @@
+name: Build
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  buildBhMonorepo:
+    concurrency:
+      group: build-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Building code"
+      - run: echo "Pushing image"

@@ -1,0 +1,25 @@
+name: Deploy API
+
+on:
+  workflow_call:
+    inputs:
+      envName:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      envName:
+        required: true
+        type: choice
+        options:
+          - dev
+          - stg
+          # - prod
+
+jobs:
+  doDeployApi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./CloudRunServiceDeployment.yml
+        with:
+          serviceName: api-${{ inputs.envName }}

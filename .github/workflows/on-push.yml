@@ -1,0 +1,16 @@
+name: Push
+
+on:
+  push:
+
+jobs:
+  doBuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./Build.yml
+  doDevDeploy:
+    if: ${{ github.ref == 'refs/heads/main' }} # FIXME: verify ref name
+    needs: [doBuild]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./env-deploy-dev.yml

@@ -1,0 +1,13 @@
+name: Test
+
+on:
+  workflow_call:
+
+jobs:
+  doBhUnitTests:
+    concurrency:
+      group: test-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./Build.yml
+      - run: echo "Running unit tests"

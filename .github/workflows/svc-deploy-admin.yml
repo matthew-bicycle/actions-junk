@@ -1,0 +1,26 @@
+name: Deploy Admin
+
+on:
+  workflow_call:
+    inputs:
+      envName:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      envName:
+        required: true
+        type: choice
+        options:
+          - dev
+          - dev2
+          - stg
+          # - prod
+
+jobs:
+  doDeployApi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./CloudRunServiceDeployment.yml
+        with:
+          serviceName: admin-${{ inputs.envName }}

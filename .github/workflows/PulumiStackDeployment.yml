@@ -1,0 +1,18 @@
+name: Pulumi Stack Deployment
+
+on:
+  workflow_call:
+    inputs:
+      stackName:
+        type: string
+        required: true
+
+jobs:
+  deployCloudFunction:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-stack-${{ inputs.stackName }}
+    steps:
+      - uses: ./Test.yml
+      - run: |
+          echo "Deploy Pulumi Stack: ${{ inputs.stackName }}"

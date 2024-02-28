@@ -1,0 +1,38 @@
+name: Deploy All Dev Services
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  doApiDeploy:
+    runs-on: ubuntu
+    steps:
+      - uses: ./svc-deploy-api.yml
+        with:
+          envName: dev
+  doAdminDeploy:
+    runs-on: ubuntu
+    steps:
+      - uses: ./svc-deploy-admin.yml
+        with:
+          envName: dev
+  doCloudTasksDeploy:
+    runs-on: ubuntu
+    steps:
+      - uses: ./svc-deploy-cloudtasks.yml
+        with:
+          envName: dev
+  doSqlDeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./svc-deploy-sql.yml
+        with:
+          envName: dev
+  doSqlMigration:
+    needs: [doSqlDeploy]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./migrate-sql.yml
+        with:
+          envName: dev
