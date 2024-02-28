@@ -1,4 +1,4 @@
-name: 🚀 Deploy All Services
+name: _Deploy Environment
 run-name: Deploy All Services to ${{ inputs.envName }}
 
 on:

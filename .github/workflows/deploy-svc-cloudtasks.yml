@@ -1,4 +1,4 @@
-name: 🚀 Deploy CloudTasks
+name: "_Deploy service: CloudTasks"
 run-name: Deploy CloudTask queues to ${{ inputs.envName }}
 
 on:
@@ -12,13 +12,11 @@ on:
       envName:
         required: true
         type: choice
-        options:
-          - dev
-          # - prod
+        options: [dev]
 
 jobs:
   DeployCloudTasks:
-    uses: ./.github/workflows/PulumiStackDeployment.yml
+    uses: ./.github/workflows/InfraStackDeployment.yml
     with:
       stackName: cloudtasks-${{ inputs.envName }}
       envName: ${{ inputs.envName }}

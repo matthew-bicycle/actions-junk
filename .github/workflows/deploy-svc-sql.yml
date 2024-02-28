@@ -1,4 +1,4 @@
-name: 🚀 Deploy SQL
+name: "_Deploy service: SQL"
 run-name: Deploy SQL to ${{ inputs.envName }}
 
 on:
@@ -18,7 +18,7 @@ on:
 
 jobs:
   DeploySQL:
-    uses: ./.github/workflows/PulumiStackDeployment.yml
+    uses: ./.github/workflows/InfraStackDeployment.yml
     with:
       stackName: sql-${{ inputs.envName }}
       envName: ${{ inputs.envName }}

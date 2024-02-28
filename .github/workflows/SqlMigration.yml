@@ -1,4 +1,4 @@
-name: 📚 SQL Migration
+name: SQL Migration
 
 on:
   workflow_call:
@@ -10,6 +10,7 @@ on:
 jobs:
   SqlMigration:
     name: Migrate SQL in ${{ inputs.envName }}
+    environment: ${{ inputs.envName }}
     runs-on: ubuntu-latest
     concurrency:
       group: SqlMigration-${{ inputs.envName }}

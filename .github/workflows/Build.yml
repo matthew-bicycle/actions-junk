@@ -1,4 +1,4 @@
-name: 📚 Build
+name: Build
 
 on:
   workflow_call:
@@ -12,5 +12,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Building code"
-      - run: echo "Pushing image"
+      - run: echo "Pushing image" # to which project?
       - run: echo "Pushing statistics"
