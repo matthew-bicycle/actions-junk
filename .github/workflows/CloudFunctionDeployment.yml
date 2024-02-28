@@ -3,13 +3,13 @@ name: 📚 Cloud Function Deployment
 on:
   workflow_call:
     inputs:
+      envName:
+        type: string
+        required: true
       functionName:
         type: string
         required: false
         default: ALL_FUNCTIONS
-      envName:
-        type: string
-        required: true
 
 jobs:
   CloudFunctionDeployment:
