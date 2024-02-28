@@ -12,9 +12,7 @@ on:
       envName:
         required: true
         type: choice
-        options:
-          - dev
-          # - prod
+        options: [dev]
 
 jobs:
   DeployCloudTasks:

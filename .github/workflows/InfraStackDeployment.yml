@@ -1,0 +1,22 @@
+name: 📚 Infrastructure Stack Deployment
+
+on:
+  workflow_call:
+    inputs:
+      stackName:
+        type: string
+        required: true
+      envName:
+        type: string
+        required: true
+
+jobs:
+  DeployInfraStack:
+    name: Deploy ${{ inputs.envName}}-${{ inputs.stackName }} (Infrastructure Stack)
+    environment: ${{ inputs.envName }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: DeployInfraStack-${{ inputs.envName}}-${{ inputs.stackName }}
+    steps:
+      - run: |
+          echo "Deploy Infrastructure Stack: ${{ inputs.stackName }} in ${{ inputs.envName }}"

@@ -9,14 +9,9 @@ on:
         type: string
   workflow_dispatch:
     inputs:
-      envName:
+      envName: # suffix is actually better
         required: true
-        type: choice
-        options:
-          # - dev
-          - dev1
-          - staging
-          # - prod
+        type: string
 
 jobs:
   DeployAdmin:

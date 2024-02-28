@@ -1,0 +1,30 @@
+name: "🚀 Deploy service: Cloud Functions"
+run-name: Deploy Cloud Function(s) to ${{ inputs.envName }}
+
+on:
+  workflow_call:
+    inputs:
+      envName:
+        required: true
+        type: string
+      functionName:
+        type: string
+        required: false
+        default: ALL_FUNCTIONS
+  workflow_dispatch:
+    inputs:
+      envName:
+        required: false
+        type: choice
+        options: [dev]
+      functionName:
+        type: string
+        required: false
+        default: ALL_FUNCTIONS
+
+jobs:
+  DeployCloudFunctions:
+    uses: ./.github/workflows/CloudFunctionDeployment.yml
+    with:
+      envName: ${{ inputs.envName }}
+      functionName: ${{ inputs.functionName }}
