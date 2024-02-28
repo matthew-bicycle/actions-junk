@@ -1,4 +1,4 @@
-name: ⚙️ Cloud Run Deployment
+name: 📚 Cloud Run Deployment
 run-name: "Cloud Run Deployment | ${{ inputs.serviceName }} in ${{ inputs.envName }}"
 
 on:

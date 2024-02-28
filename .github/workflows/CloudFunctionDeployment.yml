@@ -1,4 +1,4 @@
-name: ⚙️ Cloud Function Deployment
+name: 📚 Cloud Function Deployment
 
 on:
   workflow_call:
