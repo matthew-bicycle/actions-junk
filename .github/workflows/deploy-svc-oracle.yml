@@ -1,4 +1,5 @@
 name: Deploy Oracle
+run-name: Deploy Oracle to ${{ inputs.envName }}
 
 on:
   workflow_call:
@@ -13,13 +14,12 @@ on:
         type: choice
         options:
           - dev
-          - stg
+          - staging
           # - prod
 
 jobs:
-  doDeployApi:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./CloudRunServiceDeployment.yml
-        with:
-          serviceName: oracle-${{ inputs.envName }}
+  DeployOracle:
+    uses: ./.github/workflows/CloudRunServiceDeployment.yml
+    with:
+      serviceName: oracle-${{ inputs.envName }}
+      envName: ${{ inputs.envName }}

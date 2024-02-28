@@ -1,0 +1,29 @@
+name: Deploy CloudTasks
+run-name: Deploy CloudTask queues to ${{ inputs.envName }}
+
+on:
+  workflow_call:
+    inputs:
+      envName:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      envName:
+        required: true
+        type: choice
+        options:
+          - dev
+          # - prod
+
+jobs:
+  Build:
+    uses: ./.github/workflows/Build.yml
+  Test:
+    needs: [Build]
+    uses: ./.github/workflows/Test.yml
+  DeployCloudTasks:
+    needs: [Test]
+    uses: ./.github/workflows/PulumiStackDeployment.yml
+    with:
+      stackName: cloudtasks-${{ inputs.envName }}

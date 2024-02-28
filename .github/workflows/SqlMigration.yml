@@ -1,4 +1,5 @@
-name: Deploy Admin
+name: SQL Migration
+run-name: Run SQL Migrations in ${{ inputs.envName }}
 
 on:
   workflow_call:
@@ -13,14 +14,13 @@ on:
         type: choice
         options:
           - dev
-          - dev2
-          - stg
           # - prod
 
 jobs:
-  doDeployApi:
+  SqlMigration:
     runs-on: ubuntu-latest
+    concurrency:
+      group: SqlMigration-${{ inputs.envName }}
     steps:
-      - uses: ./CloudRunServiceDeployment.yml
-        with:
-          serviceName: admin-${{ inputs.envName }}
+      - run: |
+          echo "Migrating SQL"

@@ -1,16 +1,15 @@
 name: Build
+run-name: "[Build] ${{ github.ref_name }} @ ${{ github.sha }}"
 
 on:
   workflow_call:
 
-permissions:
-  contents: read
-
 jobs:
-  buildBhMonorepo:
+  Build:
     concurrency:
-      group: build-${{ github.ref }}
+      group: Build-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "Building code"
       - run: echo "Pushing image"
+      - run: echo "Pushing statistics"

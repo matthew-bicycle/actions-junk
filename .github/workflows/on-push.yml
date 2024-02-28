@@ -1,16 +1,14 @@
-name: Push
+name: On Push
 
 on:
   push:
 
 jobs:
-  doBuild:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./Build.yml
-  doDevDeploy:
+  Build:
+    uses: ./.github/workflows/Build.yml
+  DevDeployFromMain:
     if: ${{ github.ref == 'refs/heads/main' }} # FIXME: verify ref name
-    needs: [doBuild]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./env-deploy-dev.yml
+    needs: [Build]
+    uses: ./.github/workflows/deploy-env.yml
+    with:
+      envName: dev
