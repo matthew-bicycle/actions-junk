@@ -18,7 +18,7 @@ on:
 
 jobs:
   DeploySQL:
-    uses: ./.github/workflows/PulumiStackDeployment.yml
+    uses: ./.github/workflows/InfraStackDeployment.yml
     with:
       stackName: sql-${{ inputs.envName }}
       envName: ${{ inputs.envName }}

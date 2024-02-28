@@ -16,7 +16,7 @@ on:
 
 jobs:
   DeployCloudTasks:
-    uses: ./.github/workflows/PulumiStackDeployment.yml
+    uses: ./.github/workflows/InfraStackDeployment.yml
     with:
       stackName: cloudtasks-${{ inputs.envName }}
       envName: ${{ inputs.envName }}
