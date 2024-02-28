@@ -1,0 +1,27 @@
+name: Deploy SQL
+
+on:
+  workflow_call:
+    inputs:
+      envName:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      envName:
+        required: true
+        type: choice
+        options:
+          - dev
+          # - prod
+
+jobs:
+  doDeploySQL:
+    uses: ./.github/workflows/PulumiStackDeployment.yml
+    with:
+      stackName: sql-${{ inputs.envName }}
+  doMigrateSQL:
+    needs: [doDeploySQL]
+    uses: ./.github/workflows/MigrateSQL.yml
+    with:
+      envName: ${{ inputs.envName }}

@@ -5,34 +5,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  doApiDeploy:
-    runs-on: ubuntu
-    steps:
-      - uses: ./svc-deploy-api.yml
-        with:
-          envName: dev
-  doAdminDeploy:
-    runs-on: ubuntu
-    steps:
-      - uses: ./svc-deploy-admin.yml
-        with:
-          envName: dev
-  doCloudTasksDeploy:
-    runs-on: ubuntu
-    steps:
-      - uses: ./svc-deploy-cloudtasks.yml
-        with:
-          envName: dev
-  doSqlDeploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./svc-deploy-sql.yml
-        with:
-          envName: dev
-  doSqlMigration:
-    needs: [doSqlDeploy]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./migrate-sql.yml
-        with:
-          envName: dev
+  DevApiDeploy:
+    uses: ./.github/workflows/svc-deploy-api.yml
+    with:
+      envName: dev
+  DevAdminDeploy:
+    uses: ./.github/workflows/svc-deploy-admin.yml
+    with:
+      envName: dev
+  CloudTasksDeploy:
+    uses: ./.github/workflows/svc-deploy-cloudtasks.yml
+    with:
+      envName: dev
+  OracleDeploy:
+    uses: ./.github/workflows/svc-deploy-oracle.yml
+    with:
+      envName: dev
+  SqlDeploy:
+    uses: ./.github/workflows/svc-deploy-sql.yml
+    with:
+      envName: dev

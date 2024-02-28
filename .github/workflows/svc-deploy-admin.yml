@@ -21,6 +21,6 @@ jobs:
   doDeployApi:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./CloudRunServiceDeployment.yml
+      - uses: ./.github/workflows/CloudRunServiceDeployment.yml
         with:
           serviceName: admin-${{ inputs.envName }}

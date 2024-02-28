@@ -8,11 +8,13 @@ on:
         required: true
 
 jobs:
+  doTest:
+    uses: ./.github/workflows/Test.yml
   deployCloudRunService:
+    needs: [doTest]
     runs-on: ubuntu
     concurrency:
       group: deploy-cloud-run-${{ inputs.serviceName }}
     steps:
-      - uses: ./Test.yml
       - run: |
           echo "Deploy Run Service: ${{ inputs.serviceName }}"
