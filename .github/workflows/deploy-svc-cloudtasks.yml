@@ -1,4 +1,4 @@
-name: Deploy CloudTasks
+name: 🚀 Deploy CloudTasks
 run-name: Deploy CloudTask queues to ${{ inputs.envName }}
 
 on:
@@ -21,3 +21,4 @@ jobs:
     uses: ./.github/workflows/PulumiStackDeployment.yml
     with:
       stackName: cloudtasks-${{ inputs.envName }}
+      envName: ${{ inputs.envName }}

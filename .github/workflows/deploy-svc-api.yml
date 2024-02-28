@@ -1,4 +1,4 @@
-name: Deploy API
+name: 🚀 Deploy API
 run-name: Deploy API to ${{ inputs.envName }}
 
 on:

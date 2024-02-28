@@ -1,5 +1,4 @@
 name: Cloud Function Deployment
-run-name: "Cloud Function Deployment | ${{ inputs.functionName }} in ${{ inputs.envName }}"
 
 on:
   workflow_call:
@@ -14,14 +13,15 @@ on:
 
 jobs:
   CloudFunctionDeployment:
+    name: CloudFunctionDeployment-${{ inputs.functionName }}→${{ inputs.envName }}
     environment: ${{ inputs.envName }}
     concurrency:
-      group: CloudFunctionDeployment-${{ inputs.functionName }}
+      group: CloudFunctionDeployment-${{ inputs.functionName }}-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
       - if: ${{ inputs.functionName == 'ALL_FUNCTIONS' }}
         run: |
-          echo: "Deploy ALL Cloud Functions for ${{ inputs.envName }}"
+          echo "Deploy ALL Cloud Functions for ${{ inputs.envName }}"
       - if: ${{ inputs.functionName != 'ALL_FUNCTIONS' }}
         run: |
-          echo "Deploy Cloud Function in ${{ inputs.envName }}: ${{ inputs.functionName }}"
+          echo "Deploy Cloud Function ${{ inputs.envName }} in ${{ inputs.functionName }}"

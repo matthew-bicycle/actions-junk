@@ -1,4 +1,4 @@
-name: Deploy Admin
+name: 🚀 Deploy Admin
 run-name: Deploy Admin to ${{ inputs.envName }}
 
 on:
@@ -13,7 +13,8 @@ on:
         required: true
         type: choice
         options:
-          - dev
+          # - dev
+          - dev1
           - staging
           # - prod
 
