@@ -1,4 +1,4 @@
-name: Deploy SQL
+name: 🚀 Deploy SQL
 run-name: Deploy SQL to ${{ inputs.envName }}
 
 on:

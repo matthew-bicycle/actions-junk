@@ -1,4 +1,4 @@
-name: On Pull Request
+name: 🧪 On Pull Request
 
 on:
   pull_request:
