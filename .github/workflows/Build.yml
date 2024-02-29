@@ -20,7 +20,7 @@ jobs:
           #       `affected` may not be very useful in our CI builds.
           # FIXME: also tag for dev/release
           pwd
-          ls -al
+          ls -al ${{ github.workspace }}
           docker build -t ${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:${{ github.sha }} .
       - uses: "google-github-actions/auth@v2"
         with:
