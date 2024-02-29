@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: build
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - run: |
           echo "Building image for ${{ github.sha }}"
           # Note: To implement `nx affected` here we would need to check out
