@@ -2,8 +2,8 @@ name: ⚙️ Build
 
 on:
   workflow_call:
-    # secrets:
-    #   GCP_PRIVATE_KEY_JSON:
+    secrets:
+      GCP_PRIVATE_KEY_JSON:
 
 jobs:
   Build:
