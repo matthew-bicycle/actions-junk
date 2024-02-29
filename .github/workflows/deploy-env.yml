@@ -1,4 +1,4 @@
-name: 🚀 Deploy Environment
+name: 🚀🚀🚀 Deploy Environment
 run-name: Deploy All Services to ${{ inputs.envName }}
 
 on:
@@ -10,11 +10,12 @@ on:
   workflow_dispatch:
     inputs:
       envName:
-        type: choice
+        type: string
         required: true
-        options:
-          - dev
-          # - prod
+
+# FIXME:
+# If the event is a call, the environment name should be <envName>
+# If the event is a dispatch, the environment name should be <user>.<envName>.
 
 jobs:
   ApiDeploy:
@@ -38,6 +39,6 @@ jobs:
     with:
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
-    uses: ./.github/workflows/CloudFunctionDeployment.yml
+    uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     with:
       envName: ${{ inputs.envName }}

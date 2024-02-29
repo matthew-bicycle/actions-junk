@@ -1,4 +1,4 @@
-name: "🚀 Deploy service: Admin"
+name: "📚 Deploy service: Admin"
 run-name: Deploy Admin to ${{ inputs.envName }}
 
 on:
@@ -7,15 +7,15 @@ on:
       envName:
         required: true
         type: string
-  workflow_dispatch:
-    inputs:
-      envName: # suffix is actually better
-        required: true
-        type: string
 
 jobs:
-  DeployAdmin:
+  DeployAdminService:
     uses: ./.github/workflows/CloudRunServiceDeployment.yml
     with:
-      serviceName: admin-${{ inputs.envName }}
       envName: ${{ inputs.envName }}
+      serviceName: admin-${{ inputs.envName }}
+  DeployAdminInfra:
+    uses: ./.github/workflows/InfraStackDeployment.yml
+    with:
+      envName: ${{ inputs.envName }}
+      stackName: admin-${{ inputs.envName }}

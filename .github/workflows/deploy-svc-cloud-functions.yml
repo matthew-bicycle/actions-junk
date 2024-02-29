@@ -1,4 +1,4 @@
-name: "🚀 Deploy service: Cloud Functions"
+name: "📚 Deploy service: Cloud Functions"
 run-name: Deploy Cloud Function(s) to ${{ inputs.envName }}
 
 on:
@@ -7,16 +7,6 @@ on:
       envName:
         required: true
         type: string
-      functionName:
-        type: string
-        required: false
-        default: ALL_FUNCTIONS
-  workflow_dispatch:
-    inputs:
-      envName:
-        required: false
-        type: choice
-        options: [dev]
       functionName:
         type: string
         required: false

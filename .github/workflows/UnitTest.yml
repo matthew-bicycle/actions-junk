@@ -5,7 +5,6 @@ on:
 
 jobs:
   UnitTests:
-    # name: Unit test ${{ github.ref }}@${{ github.sha }}
     concurrency:
       group: UnitTests-${{ github.ref }}
     runs-on: ubuntu-latest
