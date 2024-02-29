@@ -30,4 +30,5 @@ jobs:
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           echo "Pushing image for ${{ github.sha }}"
+          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev
           docker push ${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:${{ github.sha }}
