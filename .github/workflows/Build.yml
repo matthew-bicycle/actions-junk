@@ -19,11 +19,11 @@ jobs:
           #       is very large these two steps will take a while, meaning
           #       `affected` may not be very useful in our CI builds.
           # FIXME: also tag for dev/release
-          docker build -t ${{ vars.GCP_LOCATION }}/${{ vars.GCP_PROJECT }}/builds/build:${{ github.sha }} .
+          docker build -t ${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:${{ github.sha }} .
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GITHUB_PRIVATE_KEY_JSON }}"
       - run: |
           echo "Pushing image for ${{ github.sha }}"
-          docker push -t ${{ vars.GCP_LOCATION }}/${{ vars.GCP_PROJECT }}/builds/build:${{ github.sha }}
+          docker push -t ${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:${{ github.sha }}
