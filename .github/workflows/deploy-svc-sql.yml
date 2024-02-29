@@ -1,4 +1,4 @@
-name: "🚀 Deploy service: SQL"
+name: "📚 Deploy service: SQL"
 run-name: Deploy SQL to ${{ inputs.envName }}
 
 on:
@@ -7,14 +7,6 @@ on:
       envName:
         required: true
         type: string
-  workflow_dispatch:
-    inputs:
-      envName:
-        required: true
-        type: choice
-        options:
-          - dev
-          # - prod
 
 jobs:
   DeploySQL:
