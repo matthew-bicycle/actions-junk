@@ -7,5 +7,7 @@ on:
 jobs:
   Test:
     uses: ./.github/workflows/UnitTest.yml
+    secrets:
+      GCP_PRIVATE_KEY_JSON: ${{ secrets.GCP_PRIVATE_KEY_JSON }}
 # FIXME: add preview-cloudtasks-dev/prod
 # FIXME: add preview-cloudsql-dev/prod
