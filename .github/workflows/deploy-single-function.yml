@@ -1,0 +1,21 @@
+name: 🚀 Deploy Single Function
+run-name: Deploy Function ${{ inputs.functionName }} to ${{ inputs.envName }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      envName:
+        description: "Note: Functions are only deployed in shared environments"
+        type: string
+        required: true
+      functionName:
+        description: single or comma-separated list
+        type: string
+        required: true
+
+jobs:
+  CloudFunctionsDeploy:
+    uses: ./.github/workflows/deploy-svc-cloud-functions.yml
+    with:
+      envName: ${{ inputs.envName }}
+      functionName: ${{ inputs.functionName }}
