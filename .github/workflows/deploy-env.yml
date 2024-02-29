@@ -1,4 +1,4 @@
-name: 🚀🚀 Deploy Environment
+name: 🚀🚀 Deploy Services
 run-name: Deploy Services to ${{ inputs.envName }}
 
 on:
@@ -7,6 +7,9 @@ on:
       envName:
         type: string
         required: true
+      serviceName:
+        type: string
+        default: (all)
   workflow_dispatch:
     inputs:
       envName:
@@ -14,9 +17,8 @@ on:
         required: true
       serviceName:
         type: choice
-        required: false
         options:
-          - ""
+          - (all)
           - admin
           - api
           - cloud-functions
@@ -30,32 +32,32 @@ on:
 
 jobs:
   AdminDeploy:
-    if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
     with:
       envName: ${{ inputs.envName }}
   ApiDeploy:
-    if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
     with:
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
-    if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     with:
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
-    if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
     with:
       envName: ${{ inputs.envName }}
   OracleDeploy:
-    if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
     with:
       envName: ${{ inputs.envName }}
   SqlDeploy:
-    if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
     with:
       envName: ${{ inputs.envName }}

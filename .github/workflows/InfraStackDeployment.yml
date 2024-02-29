@@ -1,4 +1,4 @@
-name: 📚 Infrastructure Stack Deployment
+name: ⚙️ Infrastructure Stack Deployment
 
 on:
   workflow_call:

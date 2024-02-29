@@ -9,7 +9,7 @@ jobs:
     uses: ./.github/workflows/Build.yml
   DeployMainToDev:
     name: Update dev from new main
-    if: ${{ github.ref == 'refs/heads/main' }} # FIXME: verify ref name
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: [Build]
     uses: ./.github/workflows/deploy-env.yml
     with:

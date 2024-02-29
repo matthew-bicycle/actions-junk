@@ -1,4 +1,4 @@
-name: 📚 Cloud Run Deployment
+name: ⚙️ Cloud Run Deployment
 
 on:
   workflow_call:
