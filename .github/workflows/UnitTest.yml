@@ -9,5 +9,7 @@ jobs:
       group: UnitTests-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Running unit tests"
-      - run: echo "Pushing statistics"
+      - uses: actions/checkout@v4
+      - run: |
+          # Run unit tests
+          docker run --rm --target unit-test .
