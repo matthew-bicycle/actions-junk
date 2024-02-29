@@ -9,7 +9,7 @@ on:
         type: string
         required: true
       functionName:
-        description: single or comma-separated list
+        description: single or comma,separated,list
         type: string
         required: true
 
