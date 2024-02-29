@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 2
       - run: |
           echo "Building image for ${{ github.sha }}"
           # Note: To implement `nx affected` here we would need to check out
@@ -24,6 +24,7 @@ jobs:
           # FIXME: also tag for dev/release
           pwd
           ls -al ${{ github.workspace }}
+          git log
           docker build -t ${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:${{ github.sha }} .
       - uses: "google-github-actions/auth@v2"
         with:
