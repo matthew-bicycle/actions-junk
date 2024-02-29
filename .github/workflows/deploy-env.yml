@@ -12,6 +12,9 @@ on:
       envName:
         type: string
         required: true
+      serviceName:
+        type: string
+        required: false
 
 # FIXME:
 # If the event is a call, the environment name should be <envName>
@@ -19,26 +22,32 @@ on:
 
 jobs:
   ApiDeploy:
+    if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-api.yml
     with:
       envName: ${{ inputs.envName }}
   AdminDeploy:
+    if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
     with:
       envName: ${{ inputs.envName }}
   OracleDeploy:
+    if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
     with:
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
+    if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
     with:
       envName: ${{ inputs.envName }}
   SqlDeploy:
+    if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
     with:
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
+    if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     with:
       envName: ${{ inputs.envName }}
