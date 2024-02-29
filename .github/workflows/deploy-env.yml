@@ -1,5 +1,5 @@
-name: 🚀🚀🚀 Deploy Environment
-run-name: Deploy All Services to ${{ inputs.envName }}
+name: 🚀🚀 Deploy Environment
+run-name: Deploy Services to ${{ inputs.envName }}
 
 on:
   workflow_call:
@@ -13,27 +13,34 @@ on:
         type: string
         required: true
       serviceName:
-        type: string
+        type: choice
         required: false
+        options:
+          - admin
+          - api
+          - cloud-functions
+          - cloudtasks
+          - oracle
+          - sql
 
 # FIXME:
 # If the event is a call, the environment name should be <envName>
 # If the event is a dispatch, the environment name should be <user>.<envName>.
 
 jobs:
-  ApiDeploy:
-    if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '' }}
-    uses: ./.github/workflows/deploy-svc-api.yml
-    with:
-      envName: ${{ inputs.envName }}
   AdminDeploy:
     if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
     with:
       envName: ${{ inputs.envName }}
-  OracleDeploy:
-    if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '' }}
-    uses: ./.github/workflows/deploy-svc-oracle.yml
+  ApiDeploy:
+    if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '' }}
+    uses: ./.github/workflows/deploy-svc-api.yml
+    with:
+      envName: ${{ inputs.envName }}
+  CloudFunctionsDeploy:
+    if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '' }}
+    uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     with:
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
@@ -41,13 +48,13 @@ jobs:
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
     with:
       envName: ${{ inputs.envName }}
+  OracleDeploy:
+    if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '' }}
+    uses: ./.github/workflows/deploy-svc-oracle.yml
+    with:
+      envName: ${{ inputs.envName }}
   SqlDeploy:
     if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
-    with:
-      envName: ${{ inputs.envName }}
-  CloudFunctionsDeploy:
-    if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '' }}
-    uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     with:
       envName: ${{ inputs.envName }}
