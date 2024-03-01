@@ -24,7 +24,7 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          # Build image for current commit (if needed)
+          # Build image for ${{ github.head_ref || github.ref }} (if needed)
 
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
 
@@ -42,4 +42,4 @@ jobs:
 
           # Push image and tags for ${{ github.sha }}
           docker push ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
-          dodker push ${{ needs.CalculateImageTags.outputs.image-tag-ref }}
+          docker push ${{ needs.CalculateImageTags.outputs.image-tag-ref }}
