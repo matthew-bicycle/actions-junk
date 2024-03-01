@@ -23,7 +23,7 @@ jobs:
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
-      - uses: ./.github/workflows/PullImage.yml
+      - uses: ./.github/workflows/GetBuildImage.yml
       - if: ${{ inputs.functionName == 'ALL_FUNCTIONS' }}
         run: |
           echo "Deploy ALL Cloud Functions for ${{ inputs.envName }}"
