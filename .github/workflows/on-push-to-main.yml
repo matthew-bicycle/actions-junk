@@ -6,6 +6,9 @@ on:
     branches: [main]
 
 jobs:
+  EnsureBuild:
+    uses: ./.github/workflows/Build.yml
+    secrets: inherit
   DeployToDev:
     name: Update dev from new main
     uses: ./.github/workflows/deploy-env.yml
