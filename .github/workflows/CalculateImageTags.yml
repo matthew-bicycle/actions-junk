@@ -34,7 +34,7 @@ jobs:
 
           CURRENT_REF="${{ github.ref }}"
           REF_TAG="${CURRENT_REF//\//_}" # refs/head/fix/foo -> refs_heads_fix_foo
-          echo "IMAGE_TAG_REF=${TARGET_REPO}:ref-${CURRENT_REF}" >>"$GITHUB_OUTPUT"
+          echo "IMAGE_TAG_REF=${TARGET_REPO}:ref-${REF_TAG}" >>"$GITHUB_OUTPUT"
 
           # FIXME: tag the dev build/prod release version
           # CURRENT_RELEASE="${ ??? }"
