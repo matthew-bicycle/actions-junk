@@ -22,4 +22,5 @@ jobs:
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Run unit tests
+          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev
           docker run --rm ${{ needs.CalculateImageTags.outputs.image-tag-sha }} pnpm test
