@@ -16,8 +16,8 @@ jobs:
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
+      - id: getBuildImage
+        uses: ./.github/workflows/GetBuildImage.yml
       - run: |
           # Run unit tests
-          TARGET_IMAGE="${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:git-${{ github.sha }}"
-          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev
-          docker run --rm ${TARGET_IMAGE} pnpm test
+          docker run --rm ${{ steps.getBuildImage.outputs.TARGET_IMAGE }} pnpm test

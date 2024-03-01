@@ -1,0 +1,28 @@
+name: ⚙️ Get Build Image
+
+on:
+  workflow_call:
+    outputs:
+      TARGET_IMAGE:
+        value: ${{ jobs.GetBuildImage.outputs.TARGET_IMAGE }}
+
+jobs:
+  GetBuildImage:
+    concurrency:
+      group: GetBuildImage-${{ github.ref }}
+    runs-on: ubuntu-latest
+    environment: build
+    outputs:
+      TARGET_IMAGE: ${{ steps.pullImage.outputs.TARGET_IMAGE }}
+    steps:
+      - id: pullImage
+        run: |
+          TARGET_SHA="${{ github.event.pull_request.head.sha || github.ref }}"
+          TARGET_TAG="git-${TARGET_SHA}"
+          TARGET_REPO="${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build"
+          TARGET_IMAGE="${TARGET_REPO}:${TARGET_TAG}"
+
+          echo "TARGET_IMAGE=${TARGET_IMAGE}" >>"$GITHUB_OUTPUT"
+
+          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev
+          docker pull ${TARGET_IMAGE}

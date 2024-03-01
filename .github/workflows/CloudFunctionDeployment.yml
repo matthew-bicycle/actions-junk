@@ -19,9 +19,18 @@ jobs:
       group: CloudFunctionDeployment-${{ inputs.functionName }}-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
+      - uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "${{ vars.GCP_PROJECT }}"
+          credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
+      - uses: ./.github/workflows/PullImage.yml
       - if: ${{ inputs.functionName == 'ALL_FUNCTIONS' }}
         run: |
           echo "Deploy ALL Cloud Functions for ${{ inputs.envName }}"
+          # pull image
+          # run function deploy inside image; mount credentials via volume
       - if: ${{ inputs.functionName != 'ALL_FUNCTIONS' }}
         run: |
           echo "Deploy Cloud Function ${{ inputs.envName }} in ${{ inputs.functionName }}"
+      # make public / private?
+      # cloud sql connection?
