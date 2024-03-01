@@ -6,13 +6,14 @@ on:
       GCP_PRIVATE_KEY_JSON:
 
 jobs:
-  GetBuildImage:
-    uses: ./.github/workflows/GetBuildImage.yml
+  CalculateImageTags:
+    uses: ./.github/workflows/CalculateImageTags.yml
   UnitTests:
-    needs: [GetBuildImage]
+    needs: [CalculateImageTags]
     environment: build
     concurrency:
       group: UnitTests-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/auth@v2
@@ -21,4 +22,4 @@ jobs:
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Run unit tests
-          docker run --rm ${{ needs.GetBuildImage.outputs.image-tag-sha }} pnpm test
+          docker run --rm ${{ needs.CalculateImageTags.outputs.image-tag-sha }} pnpm test

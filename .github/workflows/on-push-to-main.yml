@@ -3,6 +3,7 @@ run-name: "Push to branch ${{ github.ref }}"
 
 on:
   push:
+    branches: [main]
 
 jobs:
   DeployToDev:
