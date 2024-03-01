@@ -12,7 +12,7 @@ jobs:
   Build:
     needs: [CalculateImageTags]
     concurrency:
-      group: Build-${{ github.head_ref || github.ref }}
+      group: Build-${{ github.head_ref || github.ref_name }}
     runs-on: ubuntu-latest
     environment: build
     steps:
@@ -24,13 +24,14 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          # Build image for ${{ github.head_ref || github.ref }} (if needed)
+          # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
 
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
 
           # Check for existing image
           if docker manifest inspect ${{ needs.CalculateImageTags.outputs.image-tag-sha }} >/dev/null; then
-            echo Existing image found for ${{ github.ref }}, skipping build
+            echo Found image ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
+            echo Image already exists, skipping build
             exit 0
           fi
 

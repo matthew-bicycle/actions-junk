@@ -16,7 +16,7 @@ jobs:
     environment: ${{ inputs.envName }}
     runs-on: ubuntu-latest
     concurrency:
-      group: DeployInfraStack-${{ inputs.envName}}-${{ inputs.stackName }}
+      group: DeployInfraStack-${{ inputs.envName }}-${{ inputs.stackName }}
     steps:
       - run: |
           echo "Deploy Infrastructure Stack: ${{ inputs.stackName }} in ${{ inputs.envName }}"
