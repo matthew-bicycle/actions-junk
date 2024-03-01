@@ -19,12 +19,18 @@ jobs:
       - run: |
           # Build image for ${{ github.sha }}
           # FIXME: add tag for dev/release
-          docker build -t ${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:git-${{ github.sha }} .
+          TARGET_IMAGE="${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build"
+          docker build \
+            -t ${TARGET_IMAGE}:git-${{ github.sha }} \
+            -t ${TARGET_IMAGE}:ref-${{ github.ref_name }} \
+            .
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Push image for ${{ github.sha }}
+          TARGET_IMAGE="${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build"
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev
-          docker push ${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build:git-${{ github.sha }}
+          docker push ${TARGET_IMAGE}:git-${{ github.sha }}
+          docker push ${TARGET_IMAGE}:ref-${{ github.ref_name }}

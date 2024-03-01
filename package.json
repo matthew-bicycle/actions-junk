@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "echo Building",
+    "test": "echo Test"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
+}

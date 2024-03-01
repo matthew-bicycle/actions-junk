@@ -1,5 +1,5 @@
 name: 🔄 On Pull Request
-run-name: "PR #${{ github.event.pull_request.number }} Updated"
+run-name: "Pull request #${{ github.event.pull_request.number }} updated"
 
 on:
   pull_request:
