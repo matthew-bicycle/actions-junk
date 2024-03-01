@@ -9,10 +9,3 @@ jobs:
     uses: ./.github/workflows/Build.yml
     secrets:
       GCP_PRIVATE_KEY_JSON: ${{ secrets.GCP_PRIVATE_KEY_JSON }}
-  DeployMainToDev:
-    name: Update dev from new main
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs: [Build]
-    uses: ./.github/workflows/deploy-env.yml
-    with:
-      envName: dev

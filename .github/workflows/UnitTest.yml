@@ -6,7 +6,10 @@ on:
       GCP_PRIVATE_KEY_JSON:
 
 jobs:
+  GetBuildImage:
+    uses: ./.github/workflows/GetBuildImage.yml
   UnitTests:
+    needs: [GetBuildImage]
     environment: build
     concurrency:
       group: UnitTests-${{ github.ref }}
@@ -16,8 +19,6 @@ jobs:
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
-      - id: getBuildImage
-        uses: ./.github/workflows/GetBuildImage.yml
       - run: |
           # Run unit tests
-          docker run --rm ${{ steps.getBuildImage.outputs.TARGET_IMAGE }} pnpm test
+          docker run --rm ${{ needs.GetBuildImage.outputs.image-tag-sha }} pnpm test

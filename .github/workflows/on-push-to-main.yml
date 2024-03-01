@@ -1,0 +1,12 @@
+name: 🔄 On Push
+run-name: "Push to branch ${{ github.ref }}"
+
+on:
+  push:
+
+jobs:
+  DeployToDev:
+    name: Update dev from new main
+    uses: ./.github/workflows/deploy-env.yml
+    with:
+      envName: dev
