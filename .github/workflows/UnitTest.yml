@@ -12,7 +12,7 @@ jobs:
       group: UnitTests-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
-      - uses: "google-github-actions/auth@v2"
+      - uses: google-github-actions/auth@v2
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
