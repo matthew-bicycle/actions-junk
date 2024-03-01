@@ -12,7 +12,7 @@ jobs:
   Build:
     needs: [CalculateImageTags]
     concurrency:
-      group: Build-${{ github.ref }}
+      group: Build-${{ github.head_ref || github.ref }}
     runs-on: ubuntu-latest
     environment: build
     steps:
@@ -39,8 +39,7 @@ jobs:
             -t ${{ needs.CalculateImageTags.outputs.image-tag-sha }} \
             -t ${{ needs.CalculateImageTags.outputs.image-tag-ref }} \
             .
-          # Push image for ${{ github.sha }}
 
-          docker push \
-            ${{ needs.CalculateImageTags.outputs.image-tag-sha }} \
-            ${{ needs.CalculateImageTags.outputs.image-tag-ref }}
+          # Push image and tags for ${{ github.sha }}
+          docker push ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
+          dodker push ${{ needs.CalculateImageTags.outputs.image-tag-ref }}

@@ -7,5 +7,6 @@ on:
 jobs:
   Test:
     uses: ./.github/workflows/UnitTest.yml
+    secrets: inherit
 # FIXME: add preview-cloudtasks-dev/prod
 # FIXME: add preview-cloudsql-dev/prod
