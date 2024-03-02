@@ -11,7 +11,6 @@ jobs:
       pull: true
   UnitTests:
     needs: [EnsureBuild]
-    environment: build
     concurrency:
       group: UnitTests-${{ github.head_ref || github.ref }}
       cancel-in-progress: true
