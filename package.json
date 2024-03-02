@@ -2,7 +2,8 @@
   "scripts": {
     "build": "echo Building",
     "test": "echo Test",
-    "start:admin": "echo Starting admin"
+    "start": "echo Starting service ",
+    "infra": "echo Updating stack "
   },
   "dependencies": {
     "uuid": "^9.0.1"

@@ -12,7 +12,7 @@ jobs:
   DeploySQL:
     uses: ./.github/workflows/InfraStackDeployment.yml
     with:
-      stackName: sql-${{ inputs.envName }}
+      serviceName: sql-${{ inputs.envName }}
       envName: ${{ inputs.envName }}
   SqlMigration:
     needs: [DeploySQL]

@@ -18,5 +18,5 @@ jobs:
   DeployCloudTasks:
     uses: ./.github/workflows/InfraStackDeployment.yml
     with:
-      stackName: cloudtasks-${{ inputs.envName }}
+      serviceName: cloudtasks-${{ inputs.envName }}
       envName: ${{ inputs.envName }}

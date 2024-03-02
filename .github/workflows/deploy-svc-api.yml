@@ -23,4 +23,4 @@ jobs:
     uses: ./.github/workflows/InfraStackDeployment.yml
     with:
       envName: ${{ inputs.envName }}
-      stackName: api-${{ inputs.envName }}
+      serviceName: api-${{ inputs.envName }}
