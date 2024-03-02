@@ -15,16 +15,14 @@ on:
 
 jobs:
   CalculateImageTags:
-    concurrency:
-      group: GetBuildImage-${{ github.ref }}
     runs-on: ubuntu-latest
     environment: build
     outputs:
-      IMAGE_TAG_SHA: ${{ steps.pullImage.outputs.IMAGE_TAG_SHA }}
-      IMAGE_TAG_REF: ${{ steps.pullImage.outputs.IMAGE_TAG_REF }}
-      # IMAGE_TAG_RELEASE: ${{ steps.pullImage.outputs.IMAGE_TAG_RELEASE }}
+      IMAGE_TAG_SHA: ${{ steps.CalculateTags.outputs.IMAGE_TAG_SHA }}
+      IMAGE_TAG_REF: ${{ steps.CalculateTags.outputs.IMAGE_TAG_REF }}
+      # IMAGE_TAG_RELEASE: ${{ steps.CalculateTags.outputs.IMAGE_TAG_RELEASE }}
     steps:
-      - id: pullImage
+      - id: CalculateTags
         run: |
           # Calculate image tags
           TARGET_REPO="${{ vars.GCP_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/builds/build"

@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "echo Building",
-    "test": "echo Test"
+    "test": "echo Test",
+    "start:admin": "echo Starting admin"
   },
   "dependencies": {
     "uuid": "^9.0.1"

@@ -1,5 +1,5 @@
-name: 🔄 On Push
-run-name: "Push to branch ${{ github.ref }}"
+name: 🔄 On Push to Main
+run-name: "Deploy main to dev"
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/Build.yml
     secrets: inherit
   DeployToDev:
-    name: Update dev from new main
     uses: ./.github/workflows/deploy-env.yml
+    secrets: inherit
     with:
       envName: dev
