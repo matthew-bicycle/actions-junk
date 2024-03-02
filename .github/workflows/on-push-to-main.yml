@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/Build.yml
     secrets: inherit
   DeployToDev:
-    uses: ./.github/workflows/deploy-env.yml
+    uses: ./.github/workflows/do-deploy-env.yml
     secrets: inherit
     with:
       envName: dev
