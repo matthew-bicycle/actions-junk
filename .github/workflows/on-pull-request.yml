@@ -1,5 +1,5 @@
 name: 🔄 On Pull Request
-run-name: "PR #${{ github.event.pull_request.number }} Updated"
+run-name: "Pull request #${{ github.event.pull_request.number }} updated"
 
 on:
   pull_request:
@@ -7,5 +7,6 @@ on:
 jobs:
   Test:
     uses: ./.github/workflows/UnitTest.yml
+    secrets: inherit
 # FIXME: add preview-cloudtasks-dev/prod
 # FIXME: add preview-cloudsql-dev/prod

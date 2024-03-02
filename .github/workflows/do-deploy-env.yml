@@ -1,4 +1,4 @@
-name: 🚀🚀 Deploy Environment
+name: 🚀🚀 Deploy Services
 run-name: Deploy Services to ${{ inputs.envName }}
 
 on:
@@ -7,6 +7,9 @@ on:
       envName:
         type: string
         required: true
+      serviceName:
+        type: string
+        default: (all)
   workflow_dispatch:
     inputs:
       envName:
@@ -14,8 +17,8 @@ on:
         required: true
       serviceName:
         type: choice
-        required: false
         options:
+          - (all)
           - admin
           - api
           - cloud-functions
@@ -25,36 +28,43 @@ on:
 
 # FIXME:
 # If the event is a call, the environment name should be <envName>
-# If the event is a dispatch, the environment name should be <user>.<envName>.
+# If the event is a dispatch, the environment name should be <user>.<envName>
+# Functions should not be deployed in <user>.<envName> environments (yet)
 
 jobs:
   AdminDeploy:
-    if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
+    secrets: inherit
     with:
       envName: ${{ inputs.envName }}
   ApiDeploy:
-    if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
+    secrets: inherit
     with:
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
-    if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
+    secrets: inherit
     with:
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
-    if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
+    secrets: inherit
     with:
       envName: ${{ inputs.envName }}
   OracleDeploy:
-    if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
+    secrets: inherit
     with:
       envName: ${{ inputs.envName }}
   SqlDeploy:
-    if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '' }}
+    if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
+    secrets: inherit
     with:
       envName: ${{ inputs.envName }}

@@ -1,4 +1,4 @@
-name: 📚 Cloud Run Deployment
+name: ⚙️ Cloud Run Deployment
 
 on:
   workflow_call:
@@ -11,12 +11,22 @@ on:
         required: true
 
 jobs:
+  CalculateImageTags:
+    uses: ./.github/workflows/CalculateImageTags.yml
   CloudRunServiceDeployment:
+    needs: [CalculateImageTags]
     name: Deploy ${{ inputs.serviceName }}→${{ inputs.envName }} (Cloud Run Service)
     environment: ${{ inputs.envName }}
     concurrency:
       group: CloudRunServiceDeployment-${{ inputs.serviceName }}-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
+      - uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "${{ vars.GCP_PROJECT }}"
+          credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo "Deploy Run Service: ${{ inputs.serviceName }}"
+          # Deploy Run Service: ${{ inputs.serviceName }}-${{ inputs.envName }}
+          gcloud run deploy ${{ inputs.serviceName }}-${{ inputs.envName }} \
+            --image ${{ needs.CalculateImageTags.outputs.image-tag-sha }} \
+            --command "pnpm start ${{ inputs.serviceName }}-${{ inputs.envName }}"

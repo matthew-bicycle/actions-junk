@@ -1,15 +1,46 @@
-name: 📚 Build
+name: ⚙️ Build and Tag Image
 
 on:
   workflow_call:
+    outputs:
+      image-tag-sha:
+        value: ${{ jobs.CalculateImageTags.outputs.image-tag-sha }}
 
 jobs:
+  CalculateImageTags:
+    uses: ./.github/workflows/CalculateImageTags.yml
   Build:
+    needs: [CalculateImageTags]
     concurrency:
-      group: Build-${{ github.ref }}
-      cancel-in-progress: true
+      group: Build-${{ github.head_ref || github.ref_name }}
     runs-on: ubuntu-latest
+    environment: build
     steps:
-      - run: echo "Building code"
-      - run: echo "Pushing image" # to which project?
-      - run: echo "Pushing statistics"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "${{ vars.GCP_PROJECT }}"
+          credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
+      - run: |
+          # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
+
+          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
+
+          # Check for existing image
+          if docker manifest inspect ${{ needs.CalculateImageTags.outputs.image-tag-sha }} >/dev/null; then
+            echo Found image ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
+            echo Image already exists, skipping build
+            exit 0
+          fi
+
+          # Build image for ${{ github.sha }}
+          docker build \
+            -t ${{ needs.CalculateImageTags.outputs.image-tag-sha }} \
+            -t ${{ needs.CalculateImageTags.outputs.image-tag-ref }} \
+            .
+
+          # Push image and tags for ${{ github.sha }}
+          docker push ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
+          docker push ${{ needs.CalculateImageTags.outputs.image-tag-ref }}

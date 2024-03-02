@@ -1,0 +1,16 @@
+name: 🔄 On Push to Main
+run-name: "Deploy main to dev"
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  EnsureBuild:
+    uses: ./.github/workflows/Build.yml
+    secrets: inherit
+  DeployToDev:
+    uses: ./.github/workflows/deploy-env.yml
+    secrets: inherit
+    with:
+      envName: dev

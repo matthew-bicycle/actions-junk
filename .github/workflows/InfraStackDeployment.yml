@@ -1,9 +1,9 @@
-name: 📚 Infrastructure Stack Deployment
+name: ⚙️ Infrastructure Stack Deployment
 
 on:
   workflow_call:
     inputs:
-      stackName:
+      serviceName:
         type: string
         required: true
       envName:
@@ -11,12 +11,23 @@ on:
         required: true
 
 jobs:
+  EnsureBuild:
+    uses: ./.github/workflows/Build.yml
   DeployInfraStack:
-    name: Deploy ${{ inputs.envName}}-${{ inputs.stackName }} (Infrastructure Stack)
+    needs: [EnsureBuild]
+    name: Deploy ${{ inputs.serviceName }}-${{ inputs.envName }} (Infrastructure Stack)
     environment: ${{ inputs.envName }}
     runs-on: ubuntu-latest
     concurrency:
-      group: DeployInfraStack-${{ inputs.envName}}-${{ inputs.stackName }}
+      group: DeployInfraStack-${{ inputs.serviceName }}-${{ inputs.envName }}
     steps:
+      - uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "${{ vars.GCP_PROJECT }}"
+          credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo "Deploy Infrastructure Stack: ${{ inputs.stackName }} in ${{ inputs.envName }}"
+          # Deploy Infrastructure Stack: ${{ inputs.serviceName }} in ${{ inputs.envName }}
+          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
+          # FIXME: needs google creds passed in
+          docker run ${{ needs.EnsureBuild.outputs.image-tag-sha }} \
+            pnpm infra ${{ inputs.serviceName }}-${{ inputs.envName }}

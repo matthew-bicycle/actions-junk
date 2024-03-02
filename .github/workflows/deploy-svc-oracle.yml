@@ -18,8 +18,13 @@ on:
           # - prod
 
 jobs:
+  EnsureBuild:
+    uses: ./.github/workflows/Build.yml
+    secrets: inherit
   DeployOracle:
+    needs: [EnsureBuild]
     uses: ./.github/workflows/CloudRunServiceDeployment.yml
+    secrets: inherit
     with:
       serviceName: oracle-${{ inputs.envName }}
       envName: ${{ inputs.envName }}

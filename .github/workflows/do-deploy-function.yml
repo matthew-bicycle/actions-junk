@@ -5,11 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       envName:
-        description: "Note: Functions are only deployed in shared environments"
+        description: "envName:\nNote: Functions are only deployed in shared environments"
         type: string
         required: true
       functionName:
-        description: single or comma,separated,list
+        description: "functionName:\nsingle or comma,separated,list"
         type: string
         required: true
 
