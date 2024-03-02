@@ -1,13 +1,7 @@
-name: ⚙️ Build
+name: ⚙️ Build and Tag Image
 
 on:
   workflow_call:
-    inputs:
-      pull:
-        description: Pull the existing image, if one exists
-        type: boolean
-        default: false
-        required: false
     outputs:
       image-tag-sha:
         value: ${{ jobs.CalculateImageTags.outputs.image-tag-sha }}
@@ -35,12 +29,8 @@ jobs:
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
 
           # Check for existing image
-          PULL="${{ inputs.pull }}"
           if docker manifest inspect ${{ needs.CalculateImageTags.outputs.image-tag-sha }} >/dev/null; then
             echo Found image ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
-            if [[ "${PULL}" == "true" ]]; then
-              docker pull ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
-            fi
             echo Image already exists, skipping build
             exit 0
           fi

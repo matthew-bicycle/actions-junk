@@ -9,13 +9,19 @@ on:
         type: string
 
 jobs:
+  EnsureBuild:
+    uses: ./.github/workflows/Build.yml
+    secrets: inherit
   DeploySQL:
+    needs: [EnsureBuild]
     uses: ./.github/workflows/InfraStackDeployment.yml
+    secrets: inherit
     with:
       serviceName: sql-${{ inputs.envName }}
       envName: ${{ inputs.envName }}
   SqlMigration:
     needs: [DeploySQL]
     uses: ./.github/workflows/SqlMigration.yml
+    secrets: inherit
     with:
       envName: ${{ inputs.envName }}
