@@ -7,8 +7,6 @@ jobs:
   EnsureBuild:
     uses: ./.github/workflows/Build.yml
     secrets: inherit
-    with:
-      pull: true
   UnitTests:
     needs: [EnsureBuild]
     environment: build
