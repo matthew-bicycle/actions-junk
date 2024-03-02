@@ -7,6 +7,8 @@ jobs:
   EnsureBuild:
     uses: ./.github/workflows/Build.yml
     secrets: inherit
+    with:
+      pull: true
   UnitTests:
     needs: [EnsureBuild]
     environment: build
@@ -15,11 +17,6 @@ jobs:
       cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/auth@v2
-        with:
-          project_id: "${{ vars.GCP_PROJECT }}"
-          credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Run unit tests
-          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
           docker run ${{ needs.EnsureBuild.outputs.image-tag-sha }} pnpm test
