@@ -40,10 +40,10 @@ runs:
         # - CURRENT_REF: e.g. github.head_ref || github.ref
 
         OK=yes
-        [[ -z "${GCP_LOCATION}"]] && echo "Missing GCP_LOCATION" && OK=no
-        [[ -z "${GCP_PROJECT}"]] && echo "Missing GCP_PROJECT" && OK=no
-        [[ -z "${CURRENT_SHA}"]] && echo "Missing CURRENT_SHA" && OK=no
-        [[ -z "${CURRENT_REF}"]] && echo "Missing CURRENT_REF" && OK=no
+        [ -z "${GCP_LOCATION}" ] && echo "Error: missing GCP_LOCATION" && OK=no
+        [ -z "${GCP_PROJECT}" ] && echo "Error: missing GCP_PROJECT" && OK=no
+        [ -z "${CURRENT_SHA}" ] && echo "Error: missing CURRENT_SHA" && OK=no
+        [ -z "${CURRENT_REF}" ] && echo "Error: missing CURRENT_REF" && OK=no
         [[ "${OK}" == "no" ]] && exit 1
 
         # OUTPUTS:
