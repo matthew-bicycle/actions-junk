@@ -3,6 +3,9 @@ name: ⚙️ Cloud Run Deployment
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       serviceName:
         type: string
         required: true
@@ -22,13 +25,6 @@ jobs:
         with:
           sparse-checkout: |
             ./.github/scripts/calculateImageTags.sh
-      - id: CalculateImageTags
-        uses: ./.github/workflows/CalculateImageTags.yml
-        env:
-          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
-          GCP_LOCATION: ${{ vars.GCP_LOCATION }}
-          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          CURRENT_REF: ${{ github.head_ref || github.ref }}
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
@@ -36,5 +32,5 @@ jobs:
       - run: |
           # Deploy Run Service: ${{ inputs.serviceName }}-${{ inputs.envName }}
           gcloud run deploy ${{ inputs.serviceName }}-${{ inputs.envName }} \
-            --image ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }} \
+            --image ${{ inputs.imageTag }} \
             --command "pnpm start ${{ inputs.serviceName }}-${{ inputs.envName }}"

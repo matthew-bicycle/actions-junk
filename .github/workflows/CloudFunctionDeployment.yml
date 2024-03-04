@@ -3,6 +3,9 @@ name: ⚙️ Cloud Function Deployment
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       envName:
         type: string
         required: true
@@ -19,23 +22,12 @@ jobs:
       group: CloudFunctionDeployment-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            ./.github/scripts/calculateImageTags.sh
-      - id: CalculateImageTags
-        uses: ./.github/workflows/CalculateImageTags.yml
-        env:
-          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
-          GCP_LOCATION: ${{ vars.GCP_LOCATION }}
-          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          CURRENT_REF: ${{ github.head_ref || github.ref }}
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          IMAGE="${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
+          IMAGE="${{ inputs.imageTag }}"
           FUNCTIONS="${{ inputs.functionName }}"
           # FIXME: container needs google creds passed in
           if [[ "${FUNCTIONS}" == "ALL_FUNCTIONS" ]]; then

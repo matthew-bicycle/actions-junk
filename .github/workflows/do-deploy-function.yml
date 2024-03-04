@@ -4,6 +4,9 @@ run-name: Deploy Function ${{ inputs.functionName }} to ${{ inputs.envName }}
 on:
   workflow_dispatch:
     inputs:
+      imageTag:
+        type: string
+        required: true
       envName:
         description: "envName:\nNote: Functions are only deployed in shared environments"
         type: string
@@ -17,5 +20,6 @@ jobs:
   CloudFunctionsDeploy:
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     with:
+      imageTag: ${{ inputs.imageTag }}
       envName: ${{ inputs.envName }}
       functionName: ${{ inputs.functionName }}

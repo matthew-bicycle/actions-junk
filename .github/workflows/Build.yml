@@ -7,23 +7,36 @@ concurrency:
   group: Build-${{ github.head_ref || github.ref_name }}
 
 jobs:
+  CalculateImageTags:
+    environment: build
+    runs-on: ubuntu-latest
+    steps:
+      - id: CalculateImageTags
+        uses: ./.github/actions/CalculateImageTags
+        with:
+          gcpProject: ${{ vars.GCP_PROJECT }}
+          gcpLocation: ${{ vars.GCP_LOCATION }}
+          sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.head_ref || github.ref_name }}
+    outputs:
+      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
   Build:
+    needs: [CalculateImageTags]
     runs-on: ubuntu-latest
     environment: build
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - id: CalculateImageTags
-        uses: ./.github/workflows/CalculateImageTags.yml
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
-          IMAGE_TAG_SHA="${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
-          IMAGE_TAG_REF="${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
+          IMAGE_TAG_SHA="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
+          IMAGE_TAG_REF="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
 
           # Check for existing image

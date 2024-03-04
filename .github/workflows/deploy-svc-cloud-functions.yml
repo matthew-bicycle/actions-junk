@@ -4,6 +4,9 @@ run-name: Deploy Cloud Function(s) to ${{ inputs.envName }}
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       envName:
         required: true
         type: string
@@ -17,5 +20,6 @@ jobs:
     uses: ./.github/workflows/CloudFunctionDeployment.yml
     secrets: inherit
     with:
+      imageTag: ${{ inputs.imageTag }}
       envName: ${{ inputs.envName }}
       functionName: ${{ inputs.functionName }}

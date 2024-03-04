@@ -4,6 +4,9 @@ run-name: Deploy CloudTask queues to ${{ inputs.envName }}
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       envName:
         required: true
         type: string
@@ -19,5 +22,6 @@ jobs:
     uses: ./.github/workflows/InfraStackDeployment.yml
     secrets: inherit
     with:
+      imageTag: ${{ inputs.imageTag }}
       serviceName: cloudtasks-${{ inputs.envName }}
       envName: ${{ inputs.envName }}

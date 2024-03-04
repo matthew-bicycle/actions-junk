@@ -3,6 +3,9 @@ name: ⚙️ Infrastructure Stack Deployment
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       serviceName:
         type: string
         required: true
@@ -18,17 +21,6 @@ jobs:
     concurrency:
       group: DeployInfraStack-${{ inputs.serviceName }}-${{ inputs.envName }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            ./.github/scripts/calculateImageTags.sh
-      - id: CalculateImageTags
-        uses: ./.github/workflows/CalculateImageTags.yml
-        env:
-          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
-          GCP_LOCATION: ${{ vars.GCP_LOCATION }}
-          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          CURRENT_REF: ${{ github.head_ref || github.ref }}
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
@@ -37,5 +29,5 @@ jobs:
           # Deploy Infrastructure Stack: ${{ inputs.serviceName }} in ${{ inputs.envName }}
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
           # FIXME: needs google creds passed in
-          docker run ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }} \
+          docker run ${{ inputs.imageTag }} \
             pnpm infra ${{ inputs.serviceName }}-${{ inputs.envName }}
