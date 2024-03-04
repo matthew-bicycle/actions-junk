@@ -3,10 +3,11 @@ name: ⚙️ Build and Tag Image
 on:
   workflow_call:
 
+concurrency:
+  group: build-${{ github.head_ref || github.ref_name }}
+
 jobs:
   CalculateImageTags:
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
     environment: build
     runs-on: ubuntu-latest
     steps:
@@ -23,8 +24,6 @@ jobs:
       IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
   Build:
     needs: [CalculateImageTags]
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
     environment: build
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +35,6 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
           IMAGE_TAG_SHA="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
           IMAGE_TAG_REF="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
