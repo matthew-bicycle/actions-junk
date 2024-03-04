@@ -23,7 +23,6 @@ jobs:
         with:
           sparse-checkout: |
             ./.github/scripts/calculateImageTags.sh
-          sparse-checkout-cone-mode: false
       - id: CalculateImageTags
         run: bash -ue ./.github/scripts/calculateImageTags.sh
         env:
