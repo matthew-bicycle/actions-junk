@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Ensure build has been queued
           sleep 5
   CalculateImageTags:
@@ -46,7 +45,6 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Run unit tests
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
           docker run ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }} pnpm test

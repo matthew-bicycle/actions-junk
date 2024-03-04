@@ -45,7 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Ensure build has been queued
           sleep 5
   CalculateImageTags:
