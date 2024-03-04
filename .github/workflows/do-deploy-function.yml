@@ -19,8 +19,8 @@ on:
 # (EnsureBuild -> Build) -> CalculateImageTags -> <others>
 jobs:
   EnsureBuild:
+    # see note above
     concurrency:
-      # see note above
       group: build-${{ github.head_ref || github.ref }}
     runs-on: ubuntu-latest
     steps:
@@ -32,8 +32,8 @@ jobs:
     needs: [EnsureBuild]
     environment: build
     runs-on: ubuntu-latest
+    # see note above
     concurrency:
-      # see note above
       group: build-${{ github.head_ref || github.ref }}
     steps:
       - uses: actions/checkout@v4
