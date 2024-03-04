@@ -11,19 +11,19 @@ jobs:
   EnsureBuild:
     concurrency:
       # see note above
-      group: Build-${{ github.head_ref || github.ref }}
+      group: build-${{ github.head_ref || github.ref }}
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo Concurrency group: Build-${{ github.head_ref || github.ref_name }}
+          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Ensure build has been queued
           sleep 20
   CalculateImageTags:
     needs: [EnsureBuild]
-    environment: build
     concurrency:
       # see note above
-      group: Build-${{ github.head_ref || github.ref }}
+      group: build-${{ github.head_ref || github.ref }}
+    environment: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo Concurrency group: Build-${{ github.head_ref || github.ref_name }}
+          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Run unit tests
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
           docker run ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }} pnpm test

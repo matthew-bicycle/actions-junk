@@ -6,7 +6,7 @@ on:
 jobs:
   CalculateImageTags:
     concurrency:
-      group: Build-${{ github.head_ref || github.ref_name }}
+      group: build-${{ github.head_ref || github.ref_name }}
     environment: build
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +24,7 @@ jobs:
   Build:
     needs: [CalculateImageTags]
     concurrency:
-      group: Build-${{ github.head_ref || github.ref_name }}
+      group: build-${{ github.head_ref || github.ref_name }}
     environment: build
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,7 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo Concurrency group: Build-${{ github.head_ref || github.ref_name }}
+          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
           IMAGE_TAG_SHA="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
           IMAGE_TAG_REF="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
