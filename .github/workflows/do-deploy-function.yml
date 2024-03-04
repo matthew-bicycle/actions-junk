@@ -4,9 +4,6 @@ run-name: Deploy Function ${{ inputs.functionName }} to ${{ inputs.envName }}
 on:
   workflow_dispatch:
     inputs:
-      imageTag:
-        type: string
-        required: true
       envName:
         description: "envName:\nNote: Functions are only deployed in shared environments"
         type: string
@@ -17,9 +14,26 @@ on:
         required: true
 
 jobs:
+  CalculateImageTags:
+    environment: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: CalculateImageTags
+        uses: ./.github/actions/CalculateImageTags
+        with:
+          gcp_project: ${{ vars.GCP_PROJECT }}
+          gcp_location: ${{ vars.GCP_LOCATION }}
+          sha: ${{ github.sha }}
+          ref: ${{ github.ref_name }}
+    outputs:
+      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
   CloudFunctionsDeploy:
+    needs: [CalculateImageTags]
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
+    secrets: inherit
     with:
-      imageTag: ${{ inputs.imageTag }}
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
       functionName: ${{ inputs.functionName }}

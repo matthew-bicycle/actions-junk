@@ -29,7 +29,7 @@ on:
 # FIXME:
 # If the event is a call, the environment name should be <envName>
 # If the event is a dispatch, the environment name should be <user>.<envName>
-# Functions should not be deployed in <user>.<envName> environments (yet)
+# Functions and SQL should not be deployed in <user>.<envName> environments (yet)
 
 jobs:
   CalculateImageTags:
