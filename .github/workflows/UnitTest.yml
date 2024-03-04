@@ -16,7 +16,7 @@ jobs:
     steps:
       - run: |
           # Ensure build has been queued
-          sleep 30
+          sleep 20
   CalculateImageTags:
     needs: [EnsureBuild]
     environment: build
