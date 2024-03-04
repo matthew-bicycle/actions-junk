@@ -19,7 +19,7 @@ jobs:
       group: DeployInfraStack-${{ inputs.serviceName }}-${{ inputs.envName }}
     steps:
       - id: CalculateImageTags
-        run: bash ./.github/scripts/calculateImageTags.sh
+        run: bash -ue ./.github/scripts/calculateImageTags.sh
         env:
           GCP_PROJECT: ${{ vars.GCP_PROJECT }}
           GCP_LOCATION: ${{ vars.GCP_LOCATION }}

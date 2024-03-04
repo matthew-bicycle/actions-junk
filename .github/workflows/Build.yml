@@ -15,7 +15,12 @@ jobs:
         with:
           fetch-depth: 2
       - id: CalculateImageTags
-        run: bash ./.github/scripts/calculateImageTags.sh
+        run: bash -ue ./.github/scripts/calculateImageTags.sh
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_LOCATION: ${{ vars.GCP_LOCATION }}
+          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CURRENT_REF: ${{ github.head_ref || github.ref }}
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
