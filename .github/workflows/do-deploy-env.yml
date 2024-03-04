@@ -67,6 +67,7 @@ jobs:
       IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
   AdminDeploy:
+    name: Deploy Admin service
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
@@ -75,6 +76,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   ApiDeploy:
+    name: Deploy Api service
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
@@ -83,6 +85,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
+    name: Deploy Cloud Functions
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
@@ -91,6 +94,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
+    name: Deploy CloudTasks stacks
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
@@ -99,6 +103,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   OracleDeploy:
+    name: Deploy Oracle service
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
@@ -107,6 +112,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   SqlDeploy:
+    name: Deploy/migrate SQL
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
