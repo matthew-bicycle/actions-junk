@@ -3,12 +3,22 @@ name: ⚙️ Unit Tests
 on:
   workflow_call:
 
-# Note: both of these jobs have the same concurrency group as Build. This
-# ensures that UnitTests is queued after the actual Build job.
-# (Build -> EnsureBuild) -> UnitTests
-# (EnsureBuild -> Build) -> UnitTests
+# Note: The first two jobs have the same concurrency group as Build. This
+# ensures that the other jobs are queued after the actual Build job.
+# (Build -> EnsureBuild) -> CalculateImageTags -> <others>
+# (EnsureBuild -> Build) -> CalculateImageTags -> <others>
 jobs:
+  EnsureBuild:
+    concurrency:
+      # see note above
+      group: Build-${{ github.head_ref || github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          # Ensure build has been queued
+          sleep 10
   CalculateImageTags:
+    needs: [EnsureBuild]
     environment: build
     concurrency:
       # see note above
@@ -28,9 +38,6 @@ jobs:
   UnitTests:
     needs: [CalculateImageTags]
     environment: build
-    concurrency:
-      # see note above
-      group: Build-${{ github.head_ref || github.ref }}
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/auth@v2

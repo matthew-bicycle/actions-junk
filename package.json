@@ -1,9 +1,11 @@
 {
   "scripts": {
-    "build": "echo Building",
-    "test": "echo Test",
+    "build": "echo Building ",
+    "test": "echo Test ",
     "start": "echo Starting service ",
-    "infra": "echo Updating stack "
+    "infra": "echo Updating stack ",
+    "functions:deploy": "echo Deploying function(s) ",
+    "sql:migrate": "echo Migrating SQL "
   },
   "dependencies": {
     "uuid": "^9.0.1"

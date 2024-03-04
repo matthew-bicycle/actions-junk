@@ -13,12 +13,22 @@ on:
         type: string
         required: true
 
-# Note: both of these jobs have the same concurrency group as Build. This
-# ensures that CloudFunctionsDeploy is queued after the actual Build job.
-# (Build -> CalculateImageTags) -> CloudFunctionsDeploy
-# (CalculateImageTags -> Build) -> CloudFunctionsDeploy
+# Note: The first two jobs have the same concurrency group as Build. This
+# ensures that the other jobs are queued after the actual Build job.
+# (Build -> EnsureBuild) -> CalculateImageTags -> <others>
+# (EnsureBuild -> Build) -> CalculateImageTags -> <others>
 jobs:
+  EnsureBuild:
+    concurrency:
+      # see note above
+      group: Build-${{ github.head_ref || github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          # Ensure build has been queued
+          sleep 10
   CalculateImageTags:
+    needs: [EnsureBuild]
     environment: build
     runs-on: ubuntu-latest
     concurrency:
@@ -40,9 +50,6 @@ jobs:
     needs: [CalculateImageTags]
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     secrets: inherit
-    concurrency:
-      # see note above
-      group: Build-${{ github.head_ref || github.ref }}
     with:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}

@@ -18,5 +18,12 @@ jobs:
     concurrency:
       group: SqlMigration-${{ inputs.envName }}
     steps:
+      - uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "${{ vars.GCP_PROJECT }}"
+          credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo "Migrating SQL"
+          # Deploy SQL in ${{ inputs.envName }}
+          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
+          # FIXME: needs google creds passed in
+          docker run ${{ inputs.imageTag }} pnpm sql:migrate ${{ inputs.envName }}
