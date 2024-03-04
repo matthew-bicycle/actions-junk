@@ -21,10 +21,6 @@ jobs:
       group: CloudRunServiceDeployment-${{ inputs.serviceName }}-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            ./.github/scripts/calculateImageTags.sh
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
