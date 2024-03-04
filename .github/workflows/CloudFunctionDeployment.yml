@@ -19,6 +19,11 @@ jobs:
       group: CloudFunctionDeployment-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ./.github/scripts/calculateImageTags.sh
+          sparse-checkout-cone-mode: false
       - id: CalculateImageTags
         run: bash -ue ./.github/scripts/calculateImageTags.sh
         env:
