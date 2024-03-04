@@ -12,10 +12,7 @@ on:
         default: ALL_FUNCTIONS
 
 jobs:
-  CalculateImageTags:
-    uses: ./.github/workflows/CalculateImageTags.yml
   CloudFunctionDeployment:
-    needs: [CalculateImageTags]
     name: Deploy ${{ inputs.functionName }}→${{ inputs.envName }} (Cloud Functions)
     environment: ${{ inputs.envName }}
     concurrency:
@@ -31,10 +28,7 @@ jobs:
           FUNCTIONS="${{ inputs.functionName }}"
           # FIXME: needs google creds passed in
           if [[ "${FUNCTIONS}" == "ALL_FUNCTIONS" ]]; then
-            docker run ${{ needs.CalculateImageTags.outputs.image-tag-sha }} pnpm functions:deploy
+            docker run pnpm functions:deploy
           else
-            docker run ${{ needs.CalculateImageTags.outputs.image-tag-sha }} pnpm functions:deploy "${FUNCTIONS}"
+            docker run pnpm functions:deploy "${FUNCTIONS}"
           fi
-
-      # make public / private?
-      # cloud sql connection?
