@@ -31,7 +31,6 @@ runs:
     - id: CalculateImageTags
       shell: bash
       run: |
-        set -ue
         # Calculate image tags for the current job
 
         # INPUTS: Define these environment variables:
@@ -39,6 +38,13 @@ runs:
         # - GCP_PROJECT: e.g. bicycle-health-dev
         # - CURRENT_SHA: e.g. github.event.pull_request.head.sha || github.sha
         # - CURRENT_REF: e.g. github.head_ref || github.ref
+
+        OK=yes
+        [[ -z "${GCP_LOCATION}"]] && echo "Missing GCP_LOCATION" && OK=no
+        [[ -z "${GCP_PROJECT}"]] && echo "Missing GCP_PROJECT" && OK=no
+        [[ -z "${CURRENT_SHA}"]] && echo "Missing CURRENT_SHA" && OK=no
+        [[ -z "${CURRENT_REF}"]] && echo "Missing CURRENT_REF" && OK=no
+        [[ "${OK}" == "no" ]] && exit 1
 
         # OUTPUTS:
         # - IMAGE_TAG_SHA
