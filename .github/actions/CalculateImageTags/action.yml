@@ -1,25 +1,34 @@
-name: ⚙️ Calculate Image Tags
+name: calculate-image-tags
+description: ⚙️ Calculate Image Tags
 
 inputs:
-  gcpProject:
+  gcp_project:
+    description: GCP project where images are stored
     type: string
-  gcpLocation:
+  gcp_location:
+    description: GCP location (region) where images are stored
     type: string
   sha:
+    description: Git SHA for the current build
     type: string
+    required: true
   ref:
+    description: Git ref for the current build
     type: string
+    required: true
 
 outputs:
   IMAGE_TAG_SHA:
+    description: Image tag based on git SHA
     value: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
   IMAGE_TAG_REF:
+    description: Image tag based on git ref
     value: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
 
 runs:
   using: composite
   steps:
-    - name: CalculateImageTags
+    - id: CalculateImageTags
       shell: bash
       run: |
         set -ue
@@ -46,9 +55,11 @@ runs:
         # CURRENT_RELEASE="${ ??? }"
         # echo "IMAGE_TAG_RELEASE=${TARGET_REPO}:v${CURRENT_RELEASE}" >>"$GITHUB_OUTPUT"
       env:
-        GCP_LOCATION: ${{ inputs.gcpLocation }}
-        GCP_PROJECT: ${{ inputs.gcpProject }}
+        GCP_PROJECT: ${{ inputs.gcp_project }}
+        GCP_LOCATION: ${{ inputs.gcp_location }}
         CURRENT_SHA: ${{ inputs.sha }}
         CURRENT_REF: ${{ inputs.ref }}
-        # CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        # CURRENT_REF: ${{ github.head_ref || github.ref }}
+
+branding:
+  icon: tag
+  color: green
