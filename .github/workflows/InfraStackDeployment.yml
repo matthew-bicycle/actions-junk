@@ -11,16 +11,20 @@ on:
         required: true
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
   DeployInfraStack:
-    needs: [EnsureBuild]
     name: Deploy ${{ inputs.serviceName }}-${{ inputs.envName }} (Infrastructure Stack)
     environment: ${{ inputs.envName }}
     runs-on: ubuntu-latest
     concurrency:
       group: DeployInfraStack-${{ inputs.serviceName }}-${{ inputs.envName }}
     steps:
+      - id: CalculateImageTags
+        run: bash ./.github/scripts/calculateImageTags.sh
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_LOCATION: ${{ vars.GCP_LOCATION }}
+          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CURRENT_REF: ${{ github.head_ref || github.ref }}
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
@@ -29,5 +33,5 @@ jobs:
           # Deploy Infrastructure Stack: ${{ inputs.serviceName }} in ${{ inputs.envName }}
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
           # FIXME: needs google creds passed in
-          docker run ${{ needs.EnsureBuild.outputs.image-tag-sha }} \
+          docker run ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }} \
             pnpm infra ${{ inputs.serviceName }}-${{ inputs.envName }}

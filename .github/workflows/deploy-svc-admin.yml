@@ -9,18 +9,13 @@ on:
         type: string
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
-    secrets: inherit
   DeployAdminService:
-    needs: [EnsureBuild]
     uses: ./.github/workflows/CloudRunServiceDeployment.yml
     secrets: inherit
     with:
       envName: ${{ inputs.envName }}
       serviceName: admin
   DeployAdminInfra:
-    needs: [EnsureBuild]
     uses: ./.github/workflows/InfraStackDeployment.yml
     secrets: inherit
     with:

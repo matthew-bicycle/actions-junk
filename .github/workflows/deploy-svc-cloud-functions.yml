@@ -13,11 +13,7 @@ on:
         default: ALL_FUNCTIONS
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
-    secrets: inherit
   DeployCloudFunctions:
-    needs: [EnsureBuild]
     uses: ./.github/workflows/CloudFunctionDeployment.yml
     secrets: inherit
     with:

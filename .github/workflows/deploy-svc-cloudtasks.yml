@@ -15,11 +15,7 @@ on:
         options: [dev]
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
-    secrets: inherit
   DeployCloudTasks:
-    needs: [EnsureBuild]
     uses: ./.github/workflows/InfraStackDeployment.yml
     secrets: inherit
     with:

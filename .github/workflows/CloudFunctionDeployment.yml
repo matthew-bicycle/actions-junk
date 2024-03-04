@@ -19,16 +19,18 @@ jobs:
       group: CloudFunctionDeployment-${{ inputs.envName }}
     runs-on: ubuntu-latest
     steps:
+      - id: CalculateImageTags
+        run: bash ./.github/scripts/calculateImageTags.sh
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
+          IMAGE="${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
           FUNCTIONS="${{ inputs.functionName }}"
-          # FIXME: needs google creds passed in
+          # FIXME: container needs google creds passed in
           if [[ "${FUNCTIONS}" == "ALL_FUNCTIONS" ]]; then
-            docker run pnpm functions:deploy
+            docker run ${IMAGE:-ImageNotSpecifiedError} pnpm functions:deploy
           else
-            docker run pnpm functions:deploy "${FUNCTIONS}"
+            docker run ${IMAGE:-ImageNotSpecifiedError} pnpm functions:deploy "${FUNCTIONS}"
           fi
