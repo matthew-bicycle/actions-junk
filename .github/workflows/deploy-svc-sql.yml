@@ -4,19 +4,19 @@ run-name: Deploy SQL to ${{ inputs.envName }}
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       envName:
         required: true
         type: string
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
-    secrets: inherit
   DeploySQL:
-    needs: [EnsureBuild]
     uses: ./.github/workflows/InfraStackDeployment.yml
     secrets: inherit
     with:
+      imageTag: ${{ inputs.imageTag }}
       serviceName: sql-${{ inputs.envName }}
       envName: ${{ inputs.envName }}
   SqlMigration:
@@ -24,4 +24,5 @@ jobs:
     uses: ./.github/workflows/SqlMigration.yml
     secrets: inherit
     with:
+      imageTag: ${{ inputs.imageTag }}
       envName: ${{ inputs.envName }}

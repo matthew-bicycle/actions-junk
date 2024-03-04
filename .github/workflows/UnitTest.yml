@@ -3,15 +3,34 @@ name: ⚙️ Unit Tests
 on:
   workflow_call:
 
+# Note: both of these jobs have the same concurrency group as Build. This
+# ensures that the UnitTests job is queued after the push is built.
+# (Build -> EnsureBuild) -> UnitTests
+# (EnsureBuild -> Build) -> UnitTests
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
-    secrets: inherit
-  UnitTests:
-    needs: [EnsureBuild]
+  CalculateImageTags:
     environment: build
     concurrency:
-      group: UnitTests-${{ github.head_ref || github.ref }}
+      # see note above
+      group: Build-${{ github.head_ref || github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: CalculateImageTags
+        uses: ./.github/actions/CalculateImageTags
+        with:
+          gcp_project: ${{ vars.GCP_PROJECT }}
+          gcp_location: ${{ vars.GCP_LOCATION }}
+          sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.head_ref || github.ref_name }}
+    outputs:
+      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+  UnitTests:
+    needs: [CalculateImageTags]
+    environment: build
+    concurrency:
+      # see note above
+      group: Build-${{ github.head_ref || github.ref }}
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/auth@v2
@@ -21,4 +40,4 @@ jobs:
       - run: |
           # Run unit tests
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
-          docker run ${{ needs.EnsureBuild.outputs.image-tag-sha }} pnpm test
+          docker run ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }} pnpm test

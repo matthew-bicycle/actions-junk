@@ -3,6 +3,9 @@ name: ⚙️ Infrastructure Stack Deployment
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       serviceName:
         type: string
         required: true
@@ -11,10 +14,7 @@ on:
         required: true
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
   DeployInfraStack:
-    needs: [EnsureBuild]
     name: Deploy ${{ inputs.serviceName }}-${{ inputs.envName }} (Infrastructure Stack)
     environment: ${{ inputs.envName }}
     runs-on: ubuntu-latest
@@ -29,5 +29,5 @@ jobs:
           # Deploy Infrastructure Stack: ${{ inputs.serviceName }} in ${{ inputs.envName }}
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
           # FIXME: needs google creds passed in
-          docker run ${{ needs.EnsureBuild.outputs.image-tag-sha }} \
+          docker run ${{ inputs.imageTag }} \
             pnpm infra ${{ inputs.serviceName }}-${{ inputs.envName }}

@@ -1,0 +1,71 @@
+name: calculate-image-tags
+description: ⚙️ Calculate Image Tags
+
+inputs:
+  gcp_project:
+    description: GCP project where images are stored
+    type: string
+  gcp_location:
+    description: GCP location (region) where images are stored
+    type: string
+  sha:
+    description: Git SHA for the current build
+    type: string
+    required: true
+  ref:
+    description: Git ref for the current build
+    type: string
+    required: true
+
+outputs:
+  IMAGE_TAG_SHA:
+    description: Image tag based on git SHA
+    value: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+  IMAGE_TAG_REF:
+    description: Image tag based on git ref
+    value: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
+
+runs:
+  using: composite
+  steps:
+    - id: CalculateImageTags
+      shell: bash
+      run: |
+        # Calculate image tags for the current job
+
+        # INPUTS: Define these environment variables:
+        # - GCP_LOCATION: e.g. us-central1
+        # - GCP_PROJECT: e.g. bicycle-health-dev
+        # - CURRENT_SHA: e.g. github.event.pull_request.head.sha || github.sha
+        # - CURRENT_REF: e.g. github.head_ref || github.ref
+
+        OK=yes
+        [ -z "${GCP_LOCATION}" ] && echo "Error: missing GCP_LOCATION" && OK=no
+        [ -z "${GCP_PROJECT}" ] && echo "Error: missing GCP_PROJECT" && OK=no
+        [ -z "${CURRENT_SHA}" ] && echo "Error: missing CURRENT_SHA" && OK=no
+        [ -z "${CURRENT_REF}" ] && echo "Error: missing CURRENT_REF" && OK=no
+        [[ "${OK}" == "no" ]] && exit 1
+
+        # OUTPUTS:
+        # - IMAGE_TAG_SHA
+        # - IMAGE_TAG_REF
+
+        TARGET_REPO="${GCP_LOCATION}-docker.pkg.dev/${GCP_PROJECT}/builds/build"
+
+        echo "IMAGE_TAG_SHA=${TARGET_REPO}:git-${CURRENT_SHA}" >>"$GITHUB_OUTPUT"
+
+        REF_TAG="${CURRENT_REF//\//_}" # refs/head/fix/foo -> refs_heads_fix_foo
+        echo "IMAGE_TAG_REF=${TARGET_REPO}:ref-${REF_TAG}" >>"$GITHUB_OUTPUT"
+
+        # FIXME: tag the dev build/prod release version
+        # CURRENT_RELEASE="${ ??? }"
+        # echo "IMAGE_TAG_RELEASE=${TARGET_REPO}:v${CURRENT_RELEASE}" >>"$GITHUB_OUTPUT"
+      env:
+        GCP_PROJECT: ${{ inputs.gcp_project }}
+        GCP_LOCATION: ${{ inputs.gcp_location }}
+        CURRENT_SHA: ${{ inputs.sha }}
+        CURRENT_REF: ${{ inputs.ref }}
+
+branding:
+  icon: tag
+  color: green

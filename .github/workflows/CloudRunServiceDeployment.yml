@@ -3,6 +3,9 @@ name: ⚙️ Cloud Run Deployment
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       serviceName:
         type: string
         required: true
@@ -11,10 +14,7 @@ on:
         required: true
 
 jobs:
-  CalculateImageTags:
-    uses: ./.github/workflows/CalculateImageTags.yml
   CloudRunServiceDeployment:
-    needs: [CalculateImageTags]
     name: Deploy ${{ inputs.serviceName }}→${{ inputs.envName }} (Cloud Run Service)
     environment: ${{ inputs.envName }}
     concurrency:
@@ -28,5 +28,5 @@ jobs:
       - run: |
           # Deploy Run Service: ${{ inputs.serviceName }}-${{ inputs.envName }}
           gcloud run deploy ${{ inputs.serviceName }}-${{ inputs.envName }} \
-            --image ${{ needs.CalculateImageTags.outputs.image-tag-sha }} \
+            --image ${{ inputs.imageTag }} \
             --command "pnpm start ${{ inputs.serviceName }}-${{ inputs.envName }}"

@@ -3,6 +3,9 @@ name: ⚙️ Cloud Function Deployment
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       envName:
         type: string
         required: true
@@ -12,10 +15,7 @@ on:
         default: ALL_FUNCTIONS
 
 jobs:
-  CalculateImageTags:
-    uses: ./.github/workflows/CalculateImageTags.yml
   CloudFunctionDeployment:
-    needs: [CalculateImageTags]
     name: Deploy ${{ inputs.functionName }}→${{ inputs.envName }} (Cloud Functions)
     environment: ${{ inputs.envName }}
     concurrency:
@@ -27,14 +27,11 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
+          IMAGE="${{ inputs.imageTag }}"
           FUNCTIONS="${{ inputs.functionName }}"
-          # FIXME: needs google creds passed in
+          # FIXME: container needs google creds passed in
           if [[ "${FUNCTIONS}" == "ALL_FUNCTIONS" ]]; then
-            docker run ${{ needs.CalculateImageTags.outputs.image-tag-sha }} pnpm functions:deploy
+            docker run ${IMAGE:-ImageNotSpecifiedError} pnpm functions:deploy
           else
-            docker run ${{ needs.CalculateImageTags.outputs.image-tag-sha }} pnpm functions:deploy "${FUNCTIONS}"
+            docker run ${IMAGE:-ImageNotSpecifiedError} pnpm functions:deploy "${FUNCTIONS}"
           fi
-
-      # make public / private?
-      # cloud sql connection?

@@ -32,39 +32,66 @@ on:
 # Functions should not be deployed in <user>.<envName> environments (yet)
 
 jobs:
+  CalculateImageTags:
+    environment: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: CalculateImageTags
+        uses: ./.github/actions/CalculateImageTags
+        with:
+          gcp_project: ${{ vars.GCP_PROJECT }}
+          gcp_location: ${{ vars.GCP_LOCATION }}
+          sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.head_ref || github.ref_name }}
+    outputs:
+      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
   AdminDeploy:
+    needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
     secrets: inherit
     with:
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   ApiDeploy:
+    needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
     secrets: inherit
     with:
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
+    needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     secrets: inherit
     with:
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
+    needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
     secrets: inherit
     with:
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   OracleDeploy:
+    needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
     secrets: inherit
     with:
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   SqlDeploy:
+    needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
     secrets: inherit
     with:
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}

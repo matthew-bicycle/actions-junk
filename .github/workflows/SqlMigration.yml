@@ -3,6 +3,9 @@ name: ⚙️ SQL Migration
 on:
   workflow_call:
     inputs:
+      imageTag:
+        type: string
+        required: true
       envName:
         required: true
         type: string

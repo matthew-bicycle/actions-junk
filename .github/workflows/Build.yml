@@ -2,17 +2,28 @@ name: ⚙️ Build and Tag Image
 
 on:
   workflow_call:
-    outputs:
-      image-tag-sha:
-        value: ${{ jobs.CalculateImageTags.outputs.image-tag-sha }}
+
+concurrency:
+  group: Build-${{ github.head_ref || github.ref_name }}
 
 jobs:
   CalculateImageTags:
-    uses: ./.github/workflows/CalculateImageTags.yml
+    environment: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: CalculateImageTags
+        uses: ./.github/actions/CalculateImageTags
+        with:
+          gcp_project: ${{ vars.GCP_PROJECT }}
+          gcp_location: ${{ vars.GCP_LOCATION }}
+          sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.head_ref || github.ref_name }}
+    outputs:
+      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
   Build:
     needs: [CalculateImageTags]
-    concurrency:
-      group: Build-${{ github.head_ref || github.ref_name }}
     runs-on: ubuntu-latest
     environment: build
     steps:
@@ -25,22 +36,23 @@ jobs:
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
-
+          IMAGE_TAG_SHA="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
+          IMAGE_TAG_REF="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
 
           # Check for existing image
-          if docker manifest inspect ${{ needs.CalculateImageTags.outputs.image-tag-sha }} >/dev/null; then
-            echo Found image ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
+          if docker manifest inspect "${IMAGE_TAG_SHA}" >/dev/null; then
+            echo Found image "${IMAGE_TAG_SHA}"
             echo Image already exists, skipping build
             exit 0
           fi
 
-          # Build image for ${{ github.sha }}
+          # Build image
           docker build \
-            -t ${{ needs.CalculateImageTags.outputs.image-tag-sha }} \
-            -t ${{ needs.CalculateImageTags.outputs.image-tag-ref }} \
+            -t "${IMAGE_TAG_SHA}" \
+            -t "${IMAGE_TAG_REF}" \
             .
 
-          # Push image and tags for ${{ github.sha }}
-          docker push ${{ needs.CalculateImageTags.outputs.image-tag-sha }}
-          docker push ${{ needs.CalculateImageTags.outputs.image-tag-ref }}
+          # Push image and tags
+          docker push "${IMAGE_TAG_SHA}"
+          docker push "${IMAGE_TAG_REF}"
