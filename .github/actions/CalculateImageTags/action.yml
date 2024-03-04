@@ -14,7 +14,7 @@ outputs:
   IMAGE_TAG_SHA:
     value: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
   IMAGE_TAG_REF:
-    value: ${{ jobs.CalculateImageTags.outputs.IMAGE_TAG_REF }}
+    value: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
 
 runs:
   using: composite
