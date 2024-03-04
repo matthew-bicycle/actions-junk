@@ -31,8 +31,22 @@ on:
 # If the event is a dispatch, the environment name should be <user>.<envName>
 # Functions and SQL should not be deployed in <user>.<envName> environments (yet)
 
+# Note: The first two jobs have the same concurrency group as Build. This
+# ensures that the other jobs are queued after the actual Build job.
+# (Build -> EnsureBuild) -> CalculateImageTags -> <others>
+# (EnsureBuild -> Build) -> CalculateImageTags -> <others>
 jobs:
+  EnsureBuild:
+    concurrency:
+      # see note above
+      group: Build-${{ github.head_ref || github.ref }}
+    runs-on: ubuntu-latest
+    steps: [run: "# Ensuring build is complete"]
   CalculateImageTags:
+    needs: [EnsureBuild]
+    concurrency:
+      # see note above
+      group: Build-${{ github.head_ref || github.ref }}
     environment: build
     runs-on: ubuntu-latest
     steps:

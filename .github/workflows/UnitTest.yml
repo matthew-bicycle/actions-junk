@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 # Note: both of these jobs have the same concurrency group as Build. This
-# ensures that the UnitTests job is queued after the push is built.
+# ensures that UnitTests is queued after the actual Build job.
 # (Build -> EnsureBuild) -> UnitTests
 # (EnsureBuild -> Build) -> UnitTests
 jobs:
