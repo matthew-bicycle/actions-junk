@@ -44,7 +44,7 @@ jobs:
     steps:
       - run: |
           # Ensure build has been queued
-          sleep 10
+          sleep 30
   CalculateImageTags:
     needs: [EnsureBuild]
     concurrency:
