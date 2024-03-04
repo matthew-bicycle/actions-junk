@@ -15,7 +15,6 @@ TARGET_REPO="${GCP_LOCATION}-docker.pkg.dev/${GCP_PROJECT}/builds/build"
 
 echo "IMAGE_TAG_SHA=${TARGET_REPO}:git-${CURRENT_SHA}" >>"$GITHUB_OUTPUT"
 
-CURRENT_REF="${{ github.head_ref || github.ref }}"
 REF_TAG="${CURRENT_REF//\//_}" # refs/head/fix/foo -> refs_heads_fix_foo
 echo "IMAGE_TAG_REF=${TARGET_REPO}:ref-${REF_TAG}" >>"$GITHUB_OUTPUT"
 
