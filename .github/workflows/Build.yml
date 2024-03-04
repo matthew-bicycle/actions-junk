@@ -15,8 +15,8 @@ jobs:
       - id: CalculateImageTags
         uses: ./.github/actions/CalculateImageTags
         with:
-          gcpProject: ${{ vars.GCP_PROJECT }}
-          gcpLocation: ${{ vars.GCP_LOCATION }}
+          gcp_project: ${{ vars.GCP_PROJECT }}
+          gcp_location: ${{ vars.GCP_LOCATION }}
           sha: ${{ github.event.pull_request.head.sha || github.sha }}
           ref: ${{ github.head_ref || github.ref_name }}
     outputs:
@@ -35,7 +35,6 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          set -x # FIXME:
           # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
           IMAGE_TAG_SHA="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
           IMAGE_TAG_REF="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
