@@ -41,7 +41,10 @@ jobs:
       # see note above
       group: Build-${{ github.head_ref || github.ref }}
     runs-on: ubuntu-latest
-    steps: [run: "# Ensuring build is complete"]
+    steps:
+      - run: |
+          # Ensure build has been queued
+          sleep 10
   CalculateImageTags:
     needs: [EnsureBuild]
     concurrency:
