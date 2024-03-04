@@ -3,11 +3,10 @@ name: ⚙️ Build and Tag Image
 on:
   workflow_call:
 
-concurrency:
-  group: Build-${{ github.head_ref || github.ref_name }}
-
 jobs:
   CalculateImageTags:
+    concurrency:
+      group: Build-${{ github.head_ref || github.ref_name }}
     environment: build
     runs-on: ubuntu-latest
     steps:
@@ -24,8 +23,10 @@ jobs:
       IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
   Build:
     needs: [CalculateImageTags]
-    runs-on: ubuntu-latest
+    concurrency:
+      group: Build-${{ github.head_ref || github.ref_name }}
     environment: build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
