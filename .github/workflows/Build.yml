@@ -56,6 +56,3 @@ jobs:
           # Push image and tags
           docker push "${IMAGE_TAG_SHA}"
           docker push "${IMAGE_TAG_REF}"
-
-          # FIXME: Remove this
-          sleep 20

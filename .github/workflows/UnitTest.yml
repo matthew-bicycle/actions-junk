@@ -17,7 +17,7 @@ jobs:
       - run: |
           echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Ensure build has been queued
-          sleep 20
+          sleep 5
   CalculateImageTags:
     needs: [EnsureBuild]
     # see note above
