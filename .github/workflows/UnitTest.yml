@@ -11,7 +11,7 @@ jobs:
   EnsureBuild:
     # see note above
     concurrency:
-      group: build-${{ github.head_ref || github.ref }}
+      group: build-${{ github.head_ref || github.ref_name }}
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -22,7 +22,7 @@ jobs:
     needs: [EnsureBuild]
     # see note above
     concurrency:
-      group: build-${{ github.head_ref || github.ref }}
+      group: build-${{ github.head_ref || github.ref_name }}
     environment: build
     runs-on: ubuntu-latest
     steps:
