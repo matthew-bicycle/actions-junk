@@ -24,7 +24,7 @@ jobs:
           sparse-checkout: |
             ./.github/scripts/calculateImageTags.sh
       - id: CalculateImageTags
-        run: bash -ue ./.github/scripts/calculateImageTags.sh
+        uses: ./.github/workflows/CalculateImageTags.yml
         env:
           GCP_PROJECT: ${{ vars.GCP_PROJECT }}
           GCP_LOCATION: ${{ vars.GCP_LOCATION }}
