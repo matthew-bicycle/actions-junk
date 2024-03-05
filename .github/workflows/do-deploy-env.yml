@@ -1,5 +1,5 @@
 name: 🚀🚀 Deploy Services
-run-name: Deploy Services to ${{ inputs.envName }}
+run-name: "Deploy Services: ${{ inputs.serviceName }} to ${{ inputs.envName }}"
 
 on:
   workflow_call:
