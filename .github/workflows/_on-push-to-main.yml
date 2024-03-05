@@ -7,7 +7,7 @@ on:
 
 jobs:
   DeployToDev:
-    uses: ./.github/workflows/do-deploy-env.yml
+    uses: ./.github/workflows/_do-deploy-env.yml
     secrets: inherit
     with:
       envName: dev
