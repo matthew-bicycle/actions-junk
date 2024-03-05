@@ -30,4 +30,4 @@ jobs:
           gcloud run deploy ${{ inputs.serviceName }}-${{ inputs.envName }} \
             --region ${{ vars.GCP_LOCATION }} \
             --image ${{ inputs.imageTag }} \
-            --command "pnpm start ${{ inputs.serviceName }}-${{ inputs.envName }}"
+            --args "pnpm,start,${{ inputs.serviceName }}-${{ inputs.envName }}"
