@@ -48,7 +48,7 @@ jobs:
       envName: ${{ inputs.envName }}
   ApiDeploy:
     name: Deploy Api service
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
     secrets: inherit
@@ -57,7 +57,7 @@ jobs:
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
     name: Deploy Cloud Functions
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     secrets: inherit
@@ -66,7 +66,7 @@ jobs:
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
     name: Deploy CloudTasks stacks
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
     secrets: inherit
@@ -75,7 +75,7 @@ jobs:
       envName: ${{ inputs.envName }}
   OracleDeploy:
     name: Deploy Oracle service
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
     secrets: inherit
@@ -84,7 +84,7 @@ jobs:
       envName: ${{ inputs.envName }}
   SqlDeploy:
     name: Deploy/migrate SQL
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
     secrets: inherit
