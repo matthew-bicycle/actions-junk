@@ -1,5 +1,5 @@
 name: 🚀🚀 Deploy Services
-run-name: Deploy Services to ${{ inputs.envName }}
+run-name: "Deploy Services: ${{ inputs.serviceName }} to ${{ inputs.envName }}"
 
 on:
   workflow_call:
@@ -31,44 +31,15 @@ on:
 # If the event is a dispatch, the environment name should be <user>.<envName>
 # Functions and SQL should not be deployed in <user>.<envName> environments (yet)
 
-# FIXME: concurrency isn't working when this is triggered by on-push-to-main
-
-# Note: The first two jobs have the same concurrency group as Build. This
-# ensures that the other jobs are queued after the actual Build job.
-# (Build -> EnsureBuild) -> CalculateImageTags -> <others>
-# (EnsureBuild -> Build) -> CalculateImageTags -> <others>
 jobs:
   EnsureBuild:
-    # see note above
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
-          # Ensure build has been queued
-          sleep 5
+    uses: ./.github/workflows/Build.yml
+    secrets: inherit
   CalculateImageTags:
-    needs: [EnsureBuild]
-    # see note above
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
-    environment: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: CalculateImageTags
-        uses: ./.github/actions/CalculateImageTags
-        with:
-          gcp_project: ${{ vars.GCP_PROJECT }}
-          gcp_location: ${{ vars.GCP_LOCATION }}
-          sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          ref: ${{ github.head_ref || github.ref_name }}
-    outputs:
-      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
-      IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
+    uses: ./.github/workflows/CalculateImageTags.yml
   AdminDeploy:
-    needs: [CalculateImageTags]
+    name: Deploy Admin service
+    needs: [EnsureBuild, CalculateImageTags]
     if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
     secrets: inherit
@@ -76,6 +47,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   ApiDeploy:
+    name: Deploy Api service
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
@@ -84,6 +56,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
+    name: Deploy Cloud Functions
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
@@ -92,6 +65,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
+    name: Deploy CloudTasks stacks
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
@@ -100,6 +74,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   OracleDeploy:
+    name: Deploy Oracle service
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
@@ -108,6 +83,7 @@ jobs:
       imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   SqlDeploy:
+    name: Deploy/migrate SQL
     needs: [CalculateImageTags]
     if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml

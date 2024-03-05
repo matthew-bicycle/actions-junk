@@ -3,41 +3,14 @@ name: ⚙️ Unit Tests
 on:
   workflow_call:
 
-# Note: The first two jobs have the same concurrency group as Build. This
-# ensures that the other jobs are queued after the actual Build job.
-# (Build -> EnsureBuild) -> CalculateImageTags -> <others>
-# (EnsureBuild -> Build) -> CalculateImageTags -> <others>
 jobs:
   EnsureBuild:
-    # see note above
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
-          # Ensure build has been queued
-          sleep 5
+    uses: ./.github/workflows/Build.yml
+    secrets: inherit
   CalculateImageTags:
-    needs: [EnsureBuild]
-    # see note above
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
-    environment: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: CalculateImageTags
-        uses: ./.github/actions/CalculateImageTags
-        with:
-          gcp_project: ${{ vars.GCP_PROJECT }}
-          gcp_location: ${{ vars.GCP_LOCATION }}
-          sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          ref: ${{ github.head_ref || github.ref_name }}
-    outputs:
-      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+    uses: ./.github/workflows/CalculateImageTags.yml
   UnitTests:
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     environment: build
     runs-on: ubuntu-latest
     steps:
@@ -46,7 +19,6 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          echo Concurrency group: build-${{ github.head_ref || github.ref_name }}
           # Run unit tests
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
           docker run ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }} pnpm test
