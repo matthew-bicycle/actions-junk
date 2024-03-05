@@ -35,59 +35,57 @@ jobs:
   EnsureBuild:
     uses: ./.github/workflows/Build.yml
     secrets: inherit
-  CalculateImageTags:
-    uses: ./.github/workflows/CalculateImageTags.yml
   AdminDeploy:
     name: Deploy Admin service
-    needs: [EnsureBuild, CalculateImageTags]
+    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   ApiDeploy:
     name: Deploy Api service
-    needs: [EnsureBuild, CalculateImageTags]
+    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
     name: Deploy Cloud Functions
-    needs: [EnsureBuild, CalculateImageTags]
+    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
     name: Deploy CloudTasks stacks
-    needs: [EnsureBuild, CalculateImageTags]
+    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   OracleDeploy:
     name: Deploy Oracle service
-    needs: [EnsureBuild, CalculateImageTags]
+    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   SqlDeploy:
     name: Deploy/migrate SQL
-    needs: [EnsureBuild, CalculateImageTags]
+    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}

@@ -2,6 +2,11 @@ name: ⚙️ Build and Tag Image
 
 on:
   workflow_call:
+    outputs:
+      IMAGE_TAG_SHA:
+        value: ${{ jobs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      IMAGE_TAG_REF:
+        value: ${{ jobs.CalculateImageTags.outputs.IMAGE_TAG_REF }}
 
 concurrency:
   group: build-${{ github.head_ref || github.ref_name }}

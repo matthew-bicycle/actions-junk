@@ -7,10 +7,8 @@ jobs:
   EnsureBuild:
     uses: ./.github/workflows/Build.yml
     secrets: inherit
-  CalculateImageTags:
-    uses: ./.github/workflows/CalculateImageTags.yml
   UnitTests:
-    needs: [EnsureBuild, CalculateImageTags]
+    needs: [EnsureBuild]
     environment: build
     runs-on: ubuntu-latest
     steps:
