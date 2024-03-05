@@ -27,6 +27,7 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
+          # Deploy Cloud Functions from build image
           IMG_TAG="${{ inputs.imageTag }}"
           FUNCTIONS="${{ inputs.functionName }}"
           IMG_LOCATION="${IMG_TAG%%-docker.pkg.dev/*}"

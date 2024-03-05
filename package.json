@@ -4,7 +4,7 @@
     "test": "echo Test ",
     "start": "node src/server.js",
     "infra": "echo Updating stack ",
-    "functions:deploy": "echo Deploying function(s) ",
+    "functions:deploy": "echo Deploying function ",
     "sql:migrate": "echo Migrating SQL "
   },
   "dependencies": {
