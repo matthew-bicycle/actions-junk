@@ -31,27 +31,11 @@ on:
 # If the event is a dispatch, the environment name should be <user>.<envName>
 # Functions and SQL should not be deployed in <user>.<envName> environments (yet)
 
-# FIXME: concurrency isn't working when this is triggered by on-push-to-main
-
-# Note: The first two jobs have the same concurrency group as Build. This
-# ensures that the other jobs are queued after the actual Build job.
-# (Build -> EnsureBuild) -> CalculateImageTags -> <others>
-# (EnsureBuild -> Build) -> CalculateImageTags -> <others>
 jobs:
   EnsureBuild:
-    # see note above
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          # Ensure build has been queued
-          sleep 5
+    uses: ./.github/workflows/Build.yml
   CalculateImageTags:
     needs: [EnsureBuild]
-    # see note above
-    concurrency:
-      group: build-${{ github.head_ref || github.ref_name }}
     environment: build
     runs-on: ubuntu-latest
     steps:
