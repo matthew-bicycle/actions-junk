@@ -27,7 +27,8 @@ jobs:
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Deploy Infrastructure Stack: ${{ inputs.serviceName }} in ${{ inputs.envName }}
-          gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
+          IMG_TAG="${{ inputs.imageTag }}"
+          IMG_LOCATION="${IMG_TAG%%-docker.pkg.dev/*}"
+          gcloud auth configure-docker "${IMG_LOCATION}-docker.pkg.dev" --quiet
           # FIXME: needs google creds passed in
-          docker run ${{ inputs.imageTag }} \
-            pnpm infra ${{ inputs.serviceName }}-${{ inputs.envName }}
+          docker run "${IMG_TAG}" pnpm infra ${{ inputs.serviceName }}-${{ inputs.envName }}

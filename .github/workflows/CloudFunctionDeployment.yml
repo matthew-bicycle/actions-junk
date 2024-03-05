@@ -27,11 +27,13 @@ jobs:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
-          IMAGE="${{ inputs.imageTag }}"
+          IMG_TAG="${{ inputs.imageTag }}"
           FUNCTIONS="${{ inputs.functionName }}"
+          IMG_LOCATION="${IMG_TAG%%-docker.pkg.dev/*}"
+          gcloud auth configure-docker "${IMG_LOCATION}-docker.pkg.dev" --quiet
           # FIXME: container needs google creds passed in
           if [[ "${FUNCTIONS}" == "ALL_FUNCTIONS" ]]; then
-            docker run ${IMAGE:-ImageNotSpecifiedError} pnpm functions:deploy
+            docker run ${IMG_TAG:-ImageNotSpecifiedError} pnpm functions:deploy
           else
-            docker run ${IMAGE:-ImageNotSpecifiedError} pnpm functions:deploy "${FUNCTIONS}"
+            docker run ${IMG_TAG:-ImageNotSpecifiedError} pnpm functions:deploy "${FUNCTIONS}"
           fi
