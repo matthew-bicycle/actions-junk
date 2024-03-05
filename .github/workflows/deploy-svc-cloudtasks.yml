@@ -18,7 +18,7 @@ on:
         options: [dev]
 
 jobs:
-  DeployCloudTasks:
+  DeployCloudTasksInfra:
     uses: ./.github/workflows/InfraStackDeployment.yml
     secrets: inherit
     with:
