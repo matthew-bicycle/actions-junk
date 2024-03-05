@@ -7,22 +7,9 @@ jobs:
   EnsureBuild:
     uses: ./.github/workflows/Build.yml
   CalculateImageTags:
-    needs: [EnsureBuild]
-    environment: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: CalculateImageTags
-        uses: ./.github/actions/CalculateImageTags
-        with:
-          gcp_project: ${{ vars.GCP_PROJECT }}
-          gcp_location: ${{ vars.GCP_LOCATION }}
-          sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          ref: ${{ github.head_ref || github.ref_name }}
-    outputs:
-      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+    uses: ./.github/workflows/CalculateImageTags.yml
   UnitTests:
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     environment: build
     runs-on: ubuntu-latest
     steps:

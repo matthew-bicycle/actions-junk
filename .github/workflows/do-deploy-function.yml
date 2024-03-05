@@ -17,23 +17,9 @@ jobs:
   EnsureBuild:
     uses: ./.github/workflows/Build.yml
   CalculateImageTags:
-    needs: [EnsureBuild]
-    environment: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: CalculateImageTags
-        uses: ./.github/actions/CalculateImageTags
-        with:
-          gcp_project: ${{ vars.GCP_PROJECT }}
-          gcp_location: ${{ vars.GCP_LOCATION }}
-          sha: ${{ github.sha }}
-          ref: ${{ github.ref_name }}
-    outputs:
-      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
-      IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}
+    uses: ./.github/workflows/CalculateImageTags.yml
   CloudFunctionsDeploy:
-    needs: [CalculateImageTags]
+    needs: [EnsureBuild, CalculateImageTags]
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     secrets: inherit
     with:
