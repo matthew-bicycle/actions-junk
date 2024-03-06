@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@pulumi/pulumi": "^3.108.1",
-    "@types/express": "^4.17.21"
+    "@types/express": "^4.17.21",
+    "typescript": "^5.4.2"
   }
 }
