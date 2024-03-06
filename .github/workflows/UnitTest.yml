@@ -2,13 +2,13 @@ name: ⚙️ Unit Tests
 
 on:
   workflow_call:
+    inputs:
+      imageTag:
+        type: string
+        required: true
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
-    secrets: inherit
   UnitTests:
-    needs: [EnsureBuild]
     environment: build
     runs-on: ubuntu-latest
     steps:
@@ -19,4 +19,4 @@ jobs:
       - run: |
           # Run unit tests
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
-          docker run ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }} pnpm test
+          docker run ${{ inputs.imageTag }} pnpm test

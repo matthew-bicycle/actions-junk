@@ -6,8 +6,14 @@ on:
     branches: [main]
 
 jobs:
+  Build:
+    uses: ./.github/workflows/Build.yml
+    secrets: inherit
   UnitTests:
+    needs: [Build]
     uses: ./.github/workflows/UnitTest.yml
+    with:
+      imageTag: ${{ needs.Build.outputs.IMAGE_TAG_SHA }}
     secrets: inherit
   DeployToDev:
     needs: [UnitTests]

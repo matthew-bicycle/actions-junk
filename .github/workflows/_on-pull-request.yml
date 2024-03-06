@@ -5,8 +5,13 @@ on:
   pull_request:
 
 jobs:
+  EnsureBuild:
+    uses: ./.github/workflows/Build.yml
   Test:
+    needs: [EnsureBuild]
     uses: ./.github/workflows/UnitTest.yml
     secrets: inherit
-# FIXME: add preview-cloudtasks-dev/prod
-# FIXME: add preview-cloudsql-dev/prod
+    with:
+      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
+# FIXME: add preview-cloudtasks-dev/-prod
+# FIXME: add preview-cloudsql-dev/-prod
