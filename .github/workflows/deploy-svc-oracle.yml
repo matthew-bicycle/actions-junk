@@ -1,4 +1,4 @@
-name: "Deploy service: Oracle"
+name: "Service runbook: Oracle"
 run-name: Deploy Oracle to ${{ inputs.envName }}
 
 on:

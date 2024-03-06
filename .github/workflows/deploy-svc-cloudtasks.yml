@@ -1,4 +1,4 @@
-name: "Deploy service: CloudTasks"
+name: "Service runbook: CloudTasks"
 run-name: Deploy CloudTask queues to ${{ inputs.envName }}
 
 on:

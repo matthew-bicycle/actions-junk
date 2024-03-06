@@ -1,4 +1,4 @@
-name: "Deploy service: Cloud Functions"
+name: "Service runbook: Cloud Functions"
 run-name: Deploy Cloud Function(s) to ${{ inputs.envName }}
 
 on:
