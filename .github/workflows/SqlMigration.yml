@@ -1,4 +1,4 @@
-name: ⚙️ SQL Migration
+name: "Task: SQL Migration"
 
 on:
   workflow_call:

@@ -12,7 +12,8 @@ on:
         required: true
       serviceName:
         type: string
-        default: (all)
+        required: true
+        # default: (all)
   workflow_dispatch:
     inputs:
       envName:
@@ -25,13 +26,13 @@ on:
       serviceName:
         type: choice
         options:
-          - (all)
+          # - (all)
           - admin
-          - api
-          - cloud-functions
-          - cloudtasks
-          - oracle
-          - sql
+          # - api
+          # - cloud-functions
+          # - cloudtasks
+          # - oracle
+          # - sql
 
 # FIXME:
 # If the event is a call, the environment name should be <envName>

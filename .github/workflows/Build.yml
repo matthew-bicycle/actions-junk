@@ -1,4 +1,4 @@
-name: ⚙️ Build and Tag Image
+name: "Task: Build and Tag Image"
 
 on:
   workflow_call:

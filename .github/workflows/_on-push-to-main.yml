@@ -15,10 +15,10 @@ jobs:
     with:
       imageTag: ${{ needs.Build.outputs.IMAGE_TAG_SHA }}
     secrets: inherit
-  DeployToDev:
-    needs: [Build, UnitTests]
-    uses: ./.github/workflows/_do-deploy-env.yml
-    secrets: inherit
-    with:
-      envName: dev
-      imageTag: ${{ needs.Build.outputs.IMAGE_TAG_SHA }}
+  # DeployToDev:
+  #   needs: [Build, UnitTests]
+  #   uses: ./.github/workflows/_do-deploy-env.yml
+  #   secrets: inherit
+  #   with:
+  #     envName: dev
+  #     imageTag: ${{ needs.Build.outputs.IMAGE_TAG_SHA }}
