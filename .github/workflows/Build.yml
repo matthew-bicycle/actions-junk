@@ -4,32 +4,63 @@ on:
   workflow_call:
     outputs:
       IMAGE_TAG_SHA:
-        value: ${{ jobs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+        value: ${{ jobs.Build.outputs.IMAGE_TAG_SHA }}
       IMAGE_TAG_REF:
-        value: ${{ jobs.CalculateImageTags.outputs.IMAGE_TAG_REF }}
+        value: ${{ jobs.Build.outputs.IMAGE_TAG_REF }}
 
 concurrency:
   group: build-${{ github.head_ref || github.ref_name }}
 
 jobs:
-  CalculateImageTags:
-    uses: ./.github/workflows/CalculateImageTags.yml
   Build:
-    needs: [CalculateImageTags]
     environment: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
+      - id: CalculateImageTags
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_LOCATION: ${{ vars.GCP_LOCATION }}
+          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CURRENT_REF: ${{ github.head_ref || github.ref }}
+        run: |
+          # Calculate image tags for the current job
+
+          # INPUTS: Define these environment variables:
+          # - GCP_LOCATION: e.g. us-central1
+          # - GCP_PROJECT: e.g. bicycle-health-dev
+          # - CURRENT_SHA: e.g. github.event.pull_request.head.sha || github.sha
+          # - CURRENT_REF: e.g. github.head_ref || github.ref
+
+          OK=yes
+          [ -z "${GCP_LOCATION}" ] && echo "Error: missing GCP_LOCATION" && OK=no
+          [ -z "${GCP_PROJECT}" ] && echo "Error: missing GCP_PROJECT" && OK=no
+          [ -z "${CURRENT_SHA}" ] && echo "Error: missing CURRENT_SHA" && OK=no
+          [ -z "${CURRENT_REF}" ] && echo "Error: missing CURRENT_REF" && OK=no
+          [[ "${OK}" == "no" ]] && exit 1
+
+          TARGET_REPO="${GCP_LOCATION}-docker.pkg.dev/${GCP_PROJECT}/builds/build"
+
+          # OUTPUT: IMAGE_TAG_SHA 
+          echo "IMAGE_TAG_SHA=${TARGET_REPO}:git-${CURRENT_SHA}" >>"$GITHUB_OUTPUT"
+
+          # OUTPUT: IMAGE_TAG_REF
+          REF_TAG="${CURRENT_REF//\//_}" # refs/head/fix/foo -> refs_heads_fix_foo
+          echo "IMAGE_TAG_REF=${TARGET_REPO}:ref-${REF_TAG}" >>"$GITHUB_OUTPUT"
+
+          # FIXME: tag the dev build/prod release version
+          # CURRENT_RELEASE="${ ??? }"
+          # echo "IMAGE_TAG_RELEASE=${TARGET_REPO}:v${CURRENT_RELEASE}" >>"$GITHUB_OUTPUT"
       - uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT }}"
           credentials_json: "${{ secrets.GCP_PRIVATE_KEY_JSON }}"
       - run: |
           # Build image for ${{ github.head_ref || github.ref_name }} (if needed)
-          IMAGE_TAG_SHA="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
-          IMAGE_TAG_REF="${{ needs.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
+          IMAGE_TAG_SHA="${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}"
+          IMAGE_TAG_REF="${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}"
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
 
           # Check for existing image
@@ -48,3 +79,6 @@ jobs:
           # Push image and tags
           docker push "${IMAGE_TAG_SHA}"
           docker push "${IMAGE_TAG_REF}"
+    outputs:
+      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
+      IMAGE_TAG_REF: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_REF }}

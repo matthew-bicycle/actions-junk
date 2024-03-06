@@ -19,4 +19,4 @@ jobs:
       - run: |
           # Run unit tests
           gcloud auth configure-docker ${{ vars.GCP_LOCATION }}-docker.pkg.dev --quiet
-          docker run ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }} pnpm test
+          docker run ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }} pnpm test
