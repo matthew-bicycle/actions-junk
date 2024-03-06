@@ -1,13 +1,17 @@
 {
   "scripts": {
-    "build": "echo Building ",
+    "build": "tsc --build",
     "test": "echo Test ",
-    "start": "node src/server.js",
+    "start": "node dist/services/svc-a/server.js",
     "infra": "echo Updating stack ",
     "functions:deploy": "echo Deploying function ",
     "sql:migrate": "echo Migrating SQL "
   },
   "dependencies": {
     "express": "^4.18.3"
+  },
+  "devDependencies": {
+    "@pulumi/pulumi": "^3.108.1",
+    "@types/express": "^4.17.21"
   }
 }

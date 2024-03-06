@@ -6,7 +6,11 @@ on:
     branches: [main]
 
 jobs:
+  UnitTests:
+    uses: ./.github/workflows/UnitTest.yml
+    secrets: inherit
   DeployToDev:
+    needs: [UnitTests]
     uses: ./.github/workflows/_do-deploy-env.yml
     secrets: inherit
     with:
