@@ -7,6 +7,9 @@ on:
       envName:
         type: string
         required: true
+      imageTag:
+        type: string
+        required: true
       serviceName:
         type: string
         default: (all)
@@ -15,6 +18,10 @@ on:
       envName:
         type: string
         required: true
+      imageTag:
+        description: (Optional) alternate build image tag
+        type: string
+        required: false
       serviceName:
         type: choice
         options:
@@ -35,8 +42,14 @@ jobs:
   CalculateImageTags:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - id: CalculateImageTags
-        run: ./.github/scripts/CalculateImageTags.sh
+        run: |
+          if [ -n "${{ inputs.imageTag }}" ]; then
+            echo "IMAGE_TAG_SHA=${{ inputs.imageTag }}"
+            exit 0
+          fi
+          bash ./.github/scripts/CalculateImageTags.sh
         env:
           GCP_PROJECT: ${{ vars.GCP_PROJECT }}
           GCP_LOCATION: ${{ vars.GCP_LOCATION }}
