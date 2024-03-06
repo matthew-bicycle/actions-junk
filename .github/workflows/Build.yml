@@ -46,6 +46,8 @@ jobs:
 
           # Build image
           docker build \
+            --build-arg "FONTAWESOME_TOKEN=${{ secrets.FONTAWESOME_TOKEN }}" \
+            --build-arg "MOBISCROLL_TOKEN=${{ secrets.MOBISCROLL_TOKEN }}" \
             -t "${IMAGE_TAG_SHA}" \
             -t "${IMAGE_TAG_REF}" \
             .
