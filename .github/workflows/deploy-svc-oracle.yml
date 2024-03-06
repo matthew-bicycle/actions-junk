@@ -12,15 +12,15 @@ on:
         type: string
 
 jobs:
-  DeployOracleService:
-    uses: ./.github/workflows/CloudRunServiceDeployment.yml
+  DeployOracleInfra:
+    uses: ./.github/workflows/InfraStackDeployment.yml
     secrets: inherit
     with:
       imageTag: ${{ inputs.imageTag }}
       envName: ${{ inputs.envName }}
       serviceName: oracle
-  DeployOracleInfra:
-    uses: ./.github/workflows/InfraStackDeployment.yml
+  DeployOracleService:
+    uses: ./.github/workflows/CloudRunServiceDeployment.yml
     secrets: inherit
     with:
       imageTag: ${{ inputs.imageTag }}
