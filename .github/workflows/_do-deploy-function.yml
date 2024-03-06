@@ -6,8 +6,11 @@ on:
     inputs:
       envName:
         description: "envName:\nNote: Functions are only deployed in shared environments"
-        type: string
+        type: choice
         required: true
+        options:
+          - dev
+          - prod
       functionName:
         description: "functionName:\nsingle or comma,separated,list"
         type: string
