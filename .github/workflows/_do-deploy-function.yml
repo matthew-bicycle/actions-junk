@@ -20,6 +20,7 @@ on:
 jobs:
   CalculateImageTags:
     runs-on: ubuntu-latest
+    environment: build
     steps:
       - uses: actions/checkout@v4
       - id: CalculateImageTags
@@ -32,8 +33,8 @@ jobs:
         env:
           GCP_PROJECT: ${{ vars.GCP_PROJECT }}
           GCP_LOCATION: ${{ vars.GCP_LOCATION }}
-          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          CURRENT_REF: ${{ github.head_ref || github.ref }}
+          CURRENT_SHA: ${{ github.sha }}
+          CURRENT_REF: ${{ github.head_ref || github.ref_name }}
     outputs:
       IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
   CloudFunctionsDeploy:

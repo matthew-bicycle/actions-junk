@@ -1,5 +1,5 @@
 name: 🔄 On Push
-run-name: "Push to branch ${{ github.ref }}"
+run-name: "Push to branch ${{ github.ref_name }}"
 
 on:
   push:
