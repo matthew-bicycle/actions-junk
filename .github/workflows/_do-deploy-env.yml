@@ -32,60 +32,69 @@ on:
 # Functions and SQL should not be deployed in <user>.<envName> environments (yet)
 
 jobs:
-  EnsureBuild:
-    uses: ./.github/workflows/Build.yml
-    secrets: inherit
+  CalculateImageTags:
+    runs-on: ubuntu-latest
+    steps:
+      - id: CalculateImageTags
+        run: ./.github/scripts/CalculateImageTags.sh
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_LOCATION: ${{ vars.GCP_LOCATION }}
+          CURRENT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CURRENT_REF: ${{ github.head_ref || github.ref }}
+    outputs:
+      IMAGE_TAG_SHA: ${{ steps.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
   AdminDeploy:
+    needs: [CalculateImageTags]
     name: Deploy Admin service
-    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'admin' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-admin.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   ApiDeploy:
+    needs: [CalculateImageTags]
     name: Deploy Api service
-    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'api' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-api.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudFunctionsDeploy:
+    needs: [CalculateImageTags]
     name: Deploy Cloud Functions
-    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'cloud-functions' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloud-functions.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   CloudTasksDeploy:
+    needs: [CalculateImageTags]
     name: Deploy CloudTasks stacks
-    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'cloudtasks' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-cloudtasks.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   OracleDeploy:
+    needs: [CalculateImageTags]
     name: Deploy Oracle service
-    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'oracle' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-oracle.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
   SqlDeploy:
+    needs: [CalculateImageTags]
     name: Deploy/migrate SQL
-    needs: [EnsureBuild]
     if: ${{ inputs.serviceName == 'sql' || inputs.serviceName == '(all)' }}
     uses: ./.github/workflows/deploy-svc-sql.yml
     secrets: inherit
     with:
-      imageTag: ${{ needs.EnsureBuild.outputs.IMAGE_TAG_SHA }}
+      imageTag: ${{ needs.CalculateImageTags.outputs.IMAGE_TAG_SHA }}
       envName: ${{ inputs.envName }}
