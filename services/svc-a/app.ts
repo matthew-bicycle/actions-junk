@@ -4,5 +4,5 @@ export const app = express();
 
 app.get("/", (req: Request, res: Response) => {
   console.log(req);
-  res.send("Request received");
+  res.send("Request received!");
 });
