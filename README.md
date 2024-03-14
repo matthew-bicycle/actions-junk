@@ -1,2 +1,3 @@
-# Test for GitHub Actions
+# Simpler layout for GitHub Actions
 
+Enjoy, with my regards.
